@@ -105,7 +105,7 @@ function toggleVariants(card, font) {
   // Step 3
   const cssSnippet = 'font-weight: 400;';
   const li3 = document.createElement('li');
-  li3.textContent = 'Paste this section inside the stylesheet for a css rule. Normal font weight is 400 by default. Change the 400 in the code to whatever weight you want from the choices below. ' + font.family + ':';
+  li3.textContent = 'Paste this section inside the stylesheet for a css rule. Normal font weight is 400 by default. Change the 400 in the code to whatever weight you want from the choices below.';
   const step3Row = makeCodeRow('', cssSnippet);
   li3.appendChild(step3Row);
   ol.appendChild(li3);
