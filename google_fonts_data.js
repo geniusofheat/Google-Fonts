@@ -100,7 +100,6 @@ function toggleVariants(card, font) {
   heading.textContent = 'How to add this font:';
   panel.appendChild(heading);
 
-  // Instructions list
   const ol = document.createElement('ol');
   ol.className = 'instructions-list';
 
@@ -117,37 +116,39 @@ function toggleVariants(card, font) {
   li2.appendChild(makeCodeRow(familySnippet));
   ol.appendChild(li2);
 
-// Step 3
-const fontFamilySnippet = "font-family: '" + font.family + "', " + font.category + ';';
-const weightCodeId = 'weight-code-' + font.family.replace(/\s+/g, '_');
-const li3 = document.createElement('li');
-li3.textContent = 'Add these two lines to your stylesheet inside any CSS rule you want ' + font.family + ' to appear in:';
+  // Step 3
+  const fontFamilySnippet = "font-family: '" + font.family + "', " + font.category + ';';
+  const weightCodeId = 'weight-code-' + font.family.replace(/\s+/g, '_');
+  const li3 = document.createElement('li');
+  li3.textContent = 'Add these two lines to your stylesheet inside any CSS rule you want ' + font.family + ' to appear in:';
 
-const li3sub = document.createElement('p');
-li3sub.className = 'instruction-sub';
-li3sub.textContent = 'Font weight controls thickness. Choose a style by clicking one from the options below. The weight will be updated in the paste code. Copy and paste it into your stylesheet.';
-li3.appendChild(li3sub);
+  const li3sub = document.createElement('p');
+  li3sub.className = 'instruction-sub';
+  li3sub.textContent = 'Font weight controls thickness. Choose a style by clicking one from the options below. The weight will be updated in the paste code. Copy and paste it into your stylesheet.';
+  li3.appendChild(li3sub);
 
-const step3Box = document.createElement('div');
-step3Box.className = 'code-wrap';
+  const step3Box = document.createElement('div');
+  step3Box.className = 'code-wrap';
 
-const codeEl = document.createElement('code');
-codeEl.className = 'instruction-code';
-codeEl.id = weightCodeId;
-codeEl.textContent = fontFamilySnippet + '\nfont-weight: 400;';
+  const codeEl = document.createElement('code');
+  codeEl.className = 'instruction-code';
+  codeEl.id = weightCodeId;
+  codeEl.textContent = fontFamilySnippet + '\nfont-weight: 400;';
 
-const copyBtn = document.createElement('button');
-copyBtn.className = 'copy-btn';
-copyBtn.textContent = '📋 Copy';
-copyBtn.addEventListener('click', function(e) {
-  e.stopPropagation();
-  copyText(codeEl.textContent, copyBtn);
-});
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'copy-btn';
+  copyBtn.textContent = '📋 Copy';
+  copyBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    copyText(codeEl.textContent, copyBtn);
+  });
 
-step3Box.appendChild(codeEl);
-step3Box.appendChild(copyBtn);
-li3.appendChild(step3Box);
-ol.appendChild(li3);
+  step3Box.appendChild(codeEl);
+  step3Box.appendChild(copyBtn);
+  li3.appendChild(step3Box);
+  ol.appendChild(li3);
+
+  panel.appendChild(ol);
 
   // ── Available styles ──
   const divider = document.createElement('div');
@@ -184,17 +185,15 @@ ol.appendChild(li3);
     row.appendChild(label);
     row.appendChild(sample);
 
-    // Tap to update font-weight code
     row.addEventListener('click', function(e) {
       e.stopPropagation();
-      const codeEl = document.getElementById(weightCodeId);
-      if (codeEl) {
+      const weightCode = document.getElementById(weightCodeId);
+      if (weightCode) {
         const isItalic = variant.includes('italic');
-        let newCode = 'font-weight: ' + weightNum + ';';
+        let newCode = fontFamilySnippet + '\nfont-weight: ' + weightNum + ';';
         if (isItalic) newCode += '\nfont-style: italic;';
-        codeEl.textContent = newCode;
+        weightCode.textContent = newCode;
       }
-      // Highlight selected row
       panel.querySelectorAll('.variant-row').forEach(function(r) {
         r.classList.remove('selected');
       });
