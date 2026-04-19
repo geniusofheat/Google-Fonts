@@ -103,9 +103,9 @@ function toggleVariants(card, font) {
   ol.appendChild(li2);
 
   // Step 3
-  const cssSnippet = "font-family: '" + font.family + "', " + font.category + ';';
+  const cssSnippet = 'font-weight: 400;';
   const li3 = document.createElement('li');
-  li3.textContent = 'Add ' + font.family + ':';
+  li3.textContent = 'Normal font weight is set to 400. Change this to the size you want from the choices below. ' + font.family + ':';
   const step3Row = makeCodeRow('', cssSnippet);
   li3.appendChild(step3Row);
   ol.appendChild(li3);
