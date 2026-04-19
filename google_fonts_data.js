@@ -20,9 +20,9 @@ async function loadFonts() {
   }
 }
 
-function loadFontFace(safeName, menuUrl) {
+function loadFontFace(safeName, url) {
   const style = document.createElement('style');
-  style.textContent = `@font-face { font-family: "${safeName}"; src: url("${menuUrl}"); }`;
+  style.textContent = `@font-face { font-family: "${safeName}"; src: url("${url}"); }`;
   document.head.appendChild(style);
 }
 
@@ -35,34 +35,50 @@ function copyText(text, btn) {
   });
 }
 
-function makeCodeRow(label, code) {
+function makeCodeRow(code, id) {
   const row = document.createElement('div');
-  row.className = 'instruction-row';
-
-  const labelEl = document.createElement('div');
-  labelEl.className = 'instruction-label';
-  labelEl.textContent = label;
-
-  const codeWrap = document.createElement('div');
-  codeWrap.className = 'code-wrap';
+  row.className = 'code-wrap';
 
   const codeEl = document.createElement('code');
   codeEl.className = 'instruction-code';
   codeEl.textContent = code;
+  if (id) codeEl.id = id;
 
   const copyBtn = document.createElement('button');
   copyBtn.className = 'copy-btn';
   copyBtn.textContent = '📋 Copy';
   copyBtn.addEventListener('click', function(e) {
     e.stopPropagation();
-    copyText(code, copyBtn);
+    copyText(codeEl.textContent, copyBtn);
   });
 
-  codeWrap.appendChild(codeEl);
-  codeWrap.appendChild(copyBtn);
-  row.appendChild(labelEl);
-  row.appendChild(codeWrap);
+  row.appendChild(codeEl);
+  row.appendChild(copyBtn);
   return row;
+}
+
+function getWeightLabel(variant) {
+  const map = {
+    '100': 'Thin',
+    '200': 'Extra Light',
+    '300': 'Light',
+    'regular': 'Regular (400)',
+    '400': 'Regular',
+    '500': 'Medium',
+    '600': 'Semi Bold',
+    '700': 'Bold',
+    '800': 'Extra Bold',
+    '900': 'Black'
+  };
+  const base = variant.replace('italic', '').trim() || 'regular';
+  const isItalic = variant.includes('italic');
+  const label = map[base] || base;
+  return label + (isItalic ? ' Italic' : '');
+}
+
+function getWeightNumber(variant) {
+  if (variant === 'regular' || variant === 'italic') return '400';
+  return variant.replace('italic', '').trim();
 }
 
 function toggleVariants(card, font) {
@@ -78,62 +94,69 @@ function toggleVariants(card, font) {
   const panel = document.createElement('div');
   panel.className = 'variants-panel';
 
-  // Instructions heading
+  // ── How to add this font ──
   const heading = document.createElement('div');
   heading.className = 'instructions-heading';
   heading.textContent = 'How to add this font:';
   panel.appendChild(heading);
 
+  // Instructions list
   const ol = document.createElement('ol');
   ol.className = 'instructions-list';
 
   // Step 1
   const li1 = document.createElement('li');
-  li1.textContent = 'Start with this in your <head>:';
-  const step1Row = makeCodeRow('', '<link href="https://fonts.googleapis.com/css2?[ADD FONTS HERE]&display=swap" rel="stylesheet">');
-  li1.appendChild(step1Row);
+  li1.textContent = 'Add this link to your <head> once. All fonts you choose will share this one link:';
+  li1.appendChild(makeCodeRow('<link href="https://fonts.googleapis.com/css2?[ADD FONTS HERE]&display=swap" rel="stylesheet">'));
   ol.appendChild(li1);
 
   // Step 2
   const familySnippet = '&family=' + font.family.replace(/\s+/g, '+');
   const li2 = document.createElement('li');
-  li2.textContent = 'Add this inside [ADD FONTS HERE]:';
-  const step2Row = makeCodeRow('', familySnippet);
-  li2.appendChild(step2Row);
+  li2.textContent = 'Add this inside [ADD FONTS HERE] for ' + font.family + ':';
+  li2.appendChild(makeCodeRow(familySnippet));
   ol.appendChild(li2);
 
   // Step 3
-  const cssSnippet = 'font-weight: 400;';
+  const weightCodeId = 'weight-code-' + font.family.replace(/\s+/g, '_');
   const li3 = document.createElement('li');
-  li3.textContent = 'Paste this section inside the stylesheet for a css rule. Normal font weight is 400 by default. Change the 400 in the code to whatever weight you want from the choices below.';
-  const step3Row = makeCodeRow('', cssSnippet);
-  li3.appendChild(step3Row);
+  li3.textContent = 'Add this to your stylesheet inside any CSS rule you want ' + font.family + ' to appear in:';
+
+  const li3sub = document.createElement('p');
+  li3sub.className = 'instruction-sub';
+  li3sub.textContent = 'Font weight controls thickness. Choose a style by clicking one from the options below. The weight will be updated in the paste code. Copy and paste it into your stylesheet.';
+  li3.appendChild(li3sub);
+  li3.appendChild(makeCodeRow('font-weight: 400;', weightCodeId));
   ol.appendChild(li3);
 
   panel.appendChild(ol);
 
-  // Divider before variants
+  // ── Available styles ──
   const divider = document.createElement('div');
   divider.className = 'variants-divider';
-  divider.textContent = 'Available styles:';
+  divider.textContent = 'Available styles — tap one to select:';
   panel.appendChild(divider);
 
-  // Variant rows
+  const variantDesc = document.createElement('p');
+  variantDesc.className = 'instruction-sub';
+  variantDesc.textContent = 'Each style below shows ' + font.family + ' at that weight. Tap a style to update the font-weight code above.';
+  panel.appendChild(variantDesc);
+
   Object.entries(font.files).forEach(function(entry) {
     const variant = entry[0];
     const fileUrl = entry[1];
     const safeName = font.family.replace(/\s+/g, '_') + '_' + variant;
+    const weightNum = getWeightNumber(variant);
+    const weightLabel = getWeightLabel(variant);
 
-    const style = document.createElement('style');
-    style.textContent = `@font-face { font-family: "${safeName}"; src: url("${fileUrl}"); }`;
-    document.head.appendChild(style);
+    loadFontFace(safeName, fileUrl);
 
     const row = document.createElement('div');
     row.className = 'variant-row';
 
     const label = document.createElement('div');
     label.className = 'variant-label';
-    label.textContent = variant;
+    label.textContent = weightLabel;
 
     const sample = document.createElement('div');
     sample.className = 'variant-sample';
@@ -142,6 +165,24 @@ function toggleVariants(card, font) {
 
     row.appendChild(label);
     row.appendChild(sample);
+
+    // Tap to update font-weight code
+    row.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const codeEl = document.getElementById(weightCodeId);
+      if (codeEl) {
+        const isItalic = variant.includes('italic');
+        let newCode = 'font-weight: ' + weightNum + ';';
+        if (isItalic) newCode += '\nfont-style: italic;';
+        codeEl.textContent = newCode;
+      }
+      // Highlight selected row
+      panel.querySelectorAll('.variant-row').forEach(function(r) {
+        r.classList.remove('selected');
+      });
+      row.classList.add('selected');
+    });
+
     panel.appendChild(row);
   });
 
