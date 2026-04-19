@@ -1,5 +1,5 @@
 // *** PASTE YOUR API KEY HERE ***
-    const API_KEY = 'AIzaSyC941rSK-K3iehOd2osiSv7PPQV6MYl0Ac';
+const API_KEY = 'AIzaSyC941rSK-K3iehOd2osiSv7PPQV6MYl0Ac';
 
 const CATEGORIES = ['serif', 'sans-serif', 'monospace', 'display', 'handwriting'];
 let allFonts = [];
@@ -26,10 +26,43 @@ function loadFontFace(safeName, menuUrl) {
   document.head.appendChild(style);
 }
 
-function loadVariantFace(safeName, fileUrl) {
-  const style = document.createElement('style');
-  style.textContent = `@font-face { font-family: "${safeName}"; src: url("${fileUrl}"); }`;
-  document.head.appendChild(style);
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(function() {
+    btn.textContent = '✓ Copied';
+    setTimeout(function() { btn.textContent = '📋 Copy'; }, 2000);
+  }).catch(function() {
+    btn.textContent = 'Failed';
+  });
+}
+
+function makeCodeRow(label, code) {
+  const row = document.createElement('div');
+  row.className = 'instruction-row';
+
+  const labelEl = document.createElement('div');
+  labelEl.className = 'instruction-label';
+  labelEl.textContent = label;
+
+  const codeWrap = document.createElement('div');
+  codeWrap.className = 'code-wrap';
+
+  const codeEl = document.createElement('code');
+  codeEl.className = 'instruction-code';
+  codeEl.textContent = code;
+
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'copy-btn';
+  copyBtn.textContent = '📋 Copy';
+  copyBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    copyText(code, copyBtn);
+  });
+
+  codeWrap.appendChild(codeEl);
+  codeWrap.appendChild(copyBtn);
+  row.appendChild(labelEl);
+  row.appendChild(codeWrap);
+  return row;
 }
 
 function toggleVariants(card, font) {
@@ -45,11 +78,55 @@ function toggleVariants(card, font) {
   const panel = document.createElement('div');
   panel.className = 'variants-panel';
 
+  // Instructions heading
+  const heading = document.createElement('div');
+  heading.className = 'instructions-heading';
+  heading.textContent = 'How to add this font:';
+  panel.appendChild(heading);
+
+  const ol = document.createElement('ol');
+  ol.className = 'instructions-list';
+
+  // Step 1
+  const li1 = document.createElement('li');
+  li1.textContent = 'Start with this in your <head>:';
+  const step1Row = makeCodeRow('', '<link href="https://fonts.googleapis.com/css2?[ADD FONTS HERE]&display=swap" rel="stylesheet">');
+  li1.appendChild(step1Row);
+  ol.appendChild(li1);
+
+  // Step 2
+  const familySnippet = '&family=' + font.family.replace(/\s+/g, '+');
+  const li2 = document.createElement('li');
+  li2.textContent = 'Add this inside [ADD FONTS HERE]:';
+  const step2Row = makeCodeRow('', familySnippet);
+  li2.appendChild(step2Row);
+  ol.appendChild(li2);
+
+  // Step 3
+  const cssSnippet = "font-family: '" + font.family + "', " + font.category + ';';
+  const li3 = document.createElement('li');
+  li3.textContent = 'Add ' + font.family + ':';
+  const step3Row = makeCodeRow('', cssSnippet);
+  li3.appendChild(step3Row);
+  ol.appendChild(li3);
+
+  panel.appendChild(ol);
+
+  // Divider before variants
+  const divider = document.createElement('div');
+  divider.className = 'variants-divider';
+  divider.textContent = 'Available styles:';
+  panel.appendChild(divider);
+
+  // Variant rows
   Object.entries(font.files).forEach(function(entry) {
     const variant = entry[0];
     const fileUrl = entry[1];
-    const safeName = font.family.replace(/\s+/g, '_') + '_' + variant.replace(/\s+/g, '_');
-    loadVariantFace(safeName, fileUrl);
+    const safeName = font.family.replace(/\s+/g, '_') + '_' + variant;
+
+    const style = document.createElement('style');
+    style.textContent = `@font-face { font-family: "${safeName}"; src: url("${fileUrl}"); }`;
+    document.head.appendChild(style);
 
     const row = document.createElement('div');
     row.className = 'variant-row';

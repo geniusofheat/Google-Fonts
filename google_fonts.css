@@ -107,17 +107,91 @@ h1 {
   text-align: left;
 }
 
+/* Instructions */
+.instructions-heading {
+  color: #c8a96e;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.instructions-list {
+  list-style: decimal;
+  padding-left: 18px;
+  margin-bottom: 16px;
+}
+
+.instructions-list li {
+  color: #e0d7c6;
+  font-size: 0.78rem;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.instruction-row {
+  margin-top: 6px;
+}
+
+.code-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.instruction-code {
+  background: #0a1628;
+  border: 1px solid #c8a96e44;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-family: monospace;
+  font-size: 0.72rem;
+  color: #c8a96e;
+  word-break: break-all;
+  flex: 1;
+}
+
+.copy-btn {
+  background: #c8a96e;
+  color: #0d1b2a;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.copy-btn:active {
+  opacity: 0.7;
+}
+
+/* Variants divider */
+.variants-divider {
+  color: #c8a96e;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-top: 1px solid #c8a96e33;
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
+
 .variant-row {
   margin-bottom: 12px;
 }
 
 .variant-label {
   font-size: 0.65rem;
-  color: #c8a96e;
+  color: #667788;
   font-family: monospace;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .variant-sample {
