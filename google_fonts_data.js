@@ -117,19 +117,37 @@ function toggleVariants(card, font) {
   li2.appendChild(makeCodeRow(familySnippet));
   ol.appendChild(li2);
 
-  // Step 3
-  const weightCodeId = 'weight-code-' + font.family.replace(/\s+/g, '_');
-  const li3 = document.createElement('li');
-  li3.textContent = 'Add this to your stylesheet inside any CSS rule you want ' + font.family + ' to appear in:';
+// Step 3
+const fontFamilySnippet = "font-family: '" + font.family + "', " + font.category + ';';
+const weightCodeId = 'weight-code-' + font.family.replace(/\s+/g, '_');
+const li3 = document.createElement('li');
+li3.textContent = 'Add these two lines to your stylesheet inside any CSS rule you want ' + font.family + ' to appear in:';
 
-  const li3sub = document.createElement('p');
-  li3sub.className = 'instruction-sub';
-  li3sub.textContent = 'Font weight controls thickness. Choose a style by clicking one from the options below. The weight will be updated in the paste code. Copy and paste it into your stylesheet.';
-  li3.appendChild(li3sub);
-  li3.appendChild(makeCodeRow('font-weight: 400;', weightCodeId));
-  ol.appendChild(li3);
+const li3sub = document.createElement('p');
+li3sub.className = 'instruction-sub';
+li3sub.textContent = 'Font weight controls thickness. Choose a style by clicking one from the options below. The weight will be updated in the paste code. Copy and paste it into your stylesheet.';
+li3.appendChild(li3sub);
 
-  panel.appendChild(ol);
+const step3Box = document.createElement('div');
+step3Box.className = 'code-wrap';
+
+const codeEl = document.createElement('code');
+codeEl.className = 'instruction-code';
+codeEl.id = weightCodeId;
+codeEl.textContent = fontFamilySnippet + '\nfont-weight: 400;';
+
+const copyBtn = document.createElement('button');
+copyBtn.className = 'copy-btn';
+copyBtn.textContent = '📋 Copy';
+copyBtn.addEventListener('click', function(e) {
+  e.stopPropagation();
+  copyText(codeEl.textContent, copyBtn);
+});
+
+step3Box.appendChild(codeEl);
+step3Box.appendChild(copyBtn);
+li3.appendChild(step3Box);
+ol.appendChild(li3);
 
   // ── Available styles ──
   const divider = document.createElement('div');
