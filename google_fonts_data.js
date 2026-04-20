@@ -1,5 +1,5 @@
 // *** PASTE YOUR API KEY HERE ***
-const API_KEY = 'AIzaSyC941rSK-K3iehOd2osiSv7PPQV6MYl0Ac';
+const API_KEY = '';
 
 const CATEGORIES = ['serif', 'sans-serif', 'monospace', 'display', 'handwriting'];
 let allFonts = [];
