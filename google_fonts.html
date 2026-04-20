@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Fonts Browser</title>
+  <link rel="manifest" href="google_fonts_manifest.json">
+  <meta name="theme-color" content="#4285F4">
+  <link rel="stylesheet" href="google_fonts.css">
+  <link href="https://fonts.googleapis.com/css2?&family=Playfair+Display&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ── Page Header ── -->
+<div class="section">
+
+<h3>Google Fonts :</h3>
+
+  	<p>Follow the steps to add google fonts to any project.</p>
+    
+<!-- ── NAV ROW ── -->
+ 
+<div class="nav-row" id="font-family-options">
+ 	
+    <button class="nav-btn" data-cat="all">All</button>
+      
+    <button class="nav-btn" data-cat="serif">Serif</button>
+      
+    <button class="nav-btn" data-cat="sans-serif">Sans-Serif</button>
+</div>
+    
+<div class="nav-row" id="font-family-options">
+	
+    <button class="nav-btn" data-cat="monospace">Monospace</button>
+    
+    <button class="nav-btn" data-cat="display">Display</button>
+    
+    <button class="nav-btn" data-cat="handwriting">Handwriting</button>
+</div>
+<hr>
+</div>
+    <!-- FONT WEIGHT LIST -->
+<div id="font-container"></div>
+
+</div>
+
+<!-- ── SECTION 1 ── -->
+<div class="section">
+    	
+    <h4>Step 1 : Link to google fonts.</h4>
+ 
+    <p>Each font has to be retrieved from the google cloud server. Copy the link from the codebox below and add it to the head section of your html.</p>
+        
+<div class="gold-block">
+	
+    <code id="static-code-1">&lt;link href="https://fonts.googleapis.com/css2?[ADD FONTS HERE]&amp;display=swap" rel="stylesheet"&gt;
+    </code>
+          
+    <button class="gold-btn" id="copy-btn-1" onclick="copyStatic('static-code-1','copy-btn-1')">📋 Copy
+    </button>
+    
+</div>
+</div>
+
+<!-- ── SECTION 2 ── -->
+<div class="section">
+    	
+    <h4>Step 2 : Font Family Identifier </h4>
+        
+    <p>Each font has a unique identifier such as (&family=serif). Just change the identifer in the command line then add the new font to your styles. The style rule is in step 3.
+    </p>
+        
+        
+<div class="gold-block">
+	
+    <code id="static-code-2" >&lt;link href="https://fonts.googleapis.com/css2?family=Roboto&amp;display=swap" rel="stylesheet"&gt;
+    </code>
+    
+    <button class="gold-btn" id="copy-btn-2" onclick="copyStatic('static-code-2','copy-btn-2')">📋 Copy
+    </button>
+</div>
+</div>
+
+<!-- ── SECTION 3 ── -->
+<div class="section">
+        
+    <h4>Step 3 : Add weight to your font.</h4>
+        
+    <p>Choose a font weight from the list and the codebox will reflect the changes. Copy and paste the code to your stylesheet rules.
+    </p>
+        
+<div class="gold-block">
+	
+    <code id="static-code-3">&lt;link href="https://fonts.googleapis.com/css2?family=Roboto&amp;family=Playfair+Display&amp;display=swap" rel="stylesheet"&gt;
+    </code>
+    
+    <button class="gold-btn" id="copy-btn-3" onclick="copyStatic('static-code-3','copy-btn-3')">📋 Copy
+    </button>
+        
+</div>
+</div>
+
+<script src="google_fonts_data.js"></script>
+
+</body>
+</html>
