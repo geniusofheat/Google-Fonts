@@ -5,10 +5,6 @@ const API_KEY = 'AIzaSyC941rSK-K3iehOd2osiSv7PPQV6MYl0Ac';
 const CATEGORIES = ['serif', 'sans-serif', 'monospace', 'display', 'handwriting'];
 let allFonts = [];
 
-// ── Code boxes start empty and clear back to empty on collapse ──
-const DEFAULT_CODE_1 = '';
-const DEFAULT_CODE_2 = '';
-
 // ─────────────────────────────────────────────
 // Load a font face into the browser
 // ─────────────────────────────────────────────
@@ -66,11 +62,11 @@ function getWeightNumber(variant) {
 function toggleVariants(card, font) {
   const existing = card.querySelector('.font-expanded');
 
-  // Collapsing — remove panel and clear both code boxes
+  // Collapsing — remove panel and clear both static code boxes
   if (existing) {
     existing.remove();
-    document.getElementById('static-code-1').textContent = DEFAULT_CODE_1;
-    document.getElementById('static-code-2').textContent = DEFAULT_CODE_2;
+    document.getElementById('static-code-1').textContent = '';
+    document.getElementById('static-code-2').textContent = '';
     return;
   }
 
@@ -88,7 +84,7 @@ function toggleVariants(card, font) {
   const tip = document.createElement('p');
   tip.className = 'tip-box';
   tip.textContent = font.family + ' has ' + font.variants.length + ' style' +
-    (font.variants.length > 1 ? 's' : '') + '. Tap one to fill in both code boxes.';
+    (font.variants.length > 1 ? 's' : '') + '. Tap one to see the code.';
   panel.appendChild(tip);
 
   // One row per weight variant
@@ -109,11 +105,11 @@ function toggleVariants(card, font) {
     label.textContent = weightLabel;
 
     const sample = document.createElement('p');
-    sample.style.fontFamily  = '"' + safeName + '", serif';
-    sample.style.fontSize    = '1.15rem';
-    sample.style.fontWeight  = weightNum;
-    sample.style.fontStyle   = isItalic ? 'italic' : 'normal';
-    sample.textContent       = font.family;
+    sample.style.fontFamily = '"' + safeName + '", serif';
+    sample.style.fontSize   = '1.15rem';
+    sample.style.fontWeight = weightNum;
+    sample.style.fontStyle  = isItalic ? 'italic' : 'normal';
+    sample.textContent      = font.family;
 
     row.appendChild(label);
     row.appendChild(sample);
@@ -121,22 +117,91 @@ function toggleVariants(card, font) {
     row.addEventListener('click', function(e) {
       e.stopPropagation();
 
-      // Fill code box 1 — HTML link tag
-      document.getElementById('static-code-1').textContent =
-        '<link href="https://fonts.googleapis.com/css2?family=' +
-        font.family.replace(/\s+/g, '+') + '&display=swap" rel="stylesheet">';
+      // Remove any existing inline code boxes from other rows
+      panel.querySelectorAll('.inline-codeboxes').forEach(function(el) {
+        el.remove();
+      });
 
-      // Fill code box 2 — CSS rules
-      let css = "font-family: '" + font.family + "', " + font.category + ';\n' +
-                'font-weight: ' + weightNum + ';';
-      if (isItalic) css += '\nfont-style: italic;';
-      document.getElementById('static-code-2').textContent = css;
-
-      // Highlight the selected row, clear others
+      // Clear highlight on all rows
       panel.querySelectorAll('.card').forEach(function(r) {
         r.style.borderColor = '';
       });
+
+      // Highlight this row
       row.style.borderColor = 'var(--gold)';
+
+      // Build the link tag code
+      const linkCode = '<link href="https://fonts.googleapis.com/css2?family=' +
+        font.family.replace(/\s+/g, '+') + '&display=swap" rel="stylesheet">';
+
+      // Build the CSS rules code
+      let cssCode = "font-family: '" + font.family + "', " + font.category + ';\n' +
+                    'font-weight: ' + weightNum + ';';
+      if (isItalic) cssCode += '\nfont-style: italic;';
+
+      // Also update the static code boxes at the bottom
+      document.getElementById('static-code-1').textContent = linkCode;
+      document.getElementById('static-code-2').textContent = cssCode;
+
+      // Build inline code box wrapper that appears inside this row
+      const inlineBoxes = document.createElement('div');
+      inlineBoxes.className = 'inline-codeboxes';
+
+      // Inline box 1
+      const inlineLabel1 = document.createElement('p');
+      inlineLabel1.textContent = 'Step 2 : Add to your HTML head';
+      inlineLabel1.style.marginTop = '8px';
+      inlineBoxes.appendChild(inlineLabel1);
+
+      const inlineWrap1 = document.createElement('div');
+      inlineWrap1.className = 'gold-block';
+
+      const inlineCode1 = document.createElement('code');
+      inlineCode1.textContent = linkCode;
+
+      const inlineBtn1 = document.createElement('button');
+      inlineBtn1.className = 'gold-btn';
+      inlineBtn1.textContent = '📋 Copy';
+      inlineBtn1.addEventListener('click', function(e) {
+        e.stopPropagation();
+        navigator.clipboard.writeText(linkCode).then(function() {
+          inlineBtn1.textContent = '✓ Copied';
+          setTimeout(function() { inlineBtn1.textContent = '📋 Copy'; }, 2000);
+        });
+      });
+
+      inlineWrap1.appendChild(inlineCode1);
+      inlineWrap1.appendChild(inlineBtn1);
+      inlineBoxes.appendChild(inlineWrap1);
+
+      // Inline box 2
+      const inlineLabel2 = document.createElement('p');
+      inlineLabel2.textContent = 'Step 3 : Add to your stylesheet';
+      inlineBoxes.appendChild(inlineLabel2);
+
+      const inlineWrap2 = document.createElement('div');
+      inlineWrap2.className = 'gold-block';
+
+      const inlineCode2 = document.createElement('code');
+      inlineCode2.textContent = cssCode;
+
+      const inlineBtn2 = document.createElement('button');
+      inlineBtn2.className = 'gold-btn';
+      inlineBtn2.textContent = '📋 Copy';
+      inlineBtn2.addEventListener('click', function(e) {
+        e.stopPropagation();
+        navigator.clipboard.writeText(cssCode).then(function() {
+          inlineBtn2.textContent = '✓ Copied';
+          setTimeout(function() { inlineBtn2.textContent = '📋 Copy'; }, 2000);
+        });
+      });
+
+      inlineWrap2.appendChild(inlineCode2);
+      inlineWrap2.appendChild(inlineBtn2);
+      inlineBoxes.appendChild(inlineWrap2);
+
+      // Append inline boxes directly inside the tapped row
+      row.appendChild(inlineBoxes);
     });
 
     panel.appendChild(row);
