@@ -2,9 +2,8 @@
   "name": "Google Fonts Browser",
   "short_name": "Fonts",
   "description": "Browse and copy Google Fonts for use in your projects.",
-  
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/Google-Fonts/index.html",
+  "scope": "/Google-Fonts/",
   "display": "standalone",
   "background_color": "#0d1b2a",
   "theme_color": "#c8a96e",
