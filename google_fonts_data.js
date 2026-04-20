@@ -24,14 +24,14 @@ function copyText(text, btn) {
 // ── Build a code box with a copy button ──
 function makeCodeBox(code, id) {
   const wrap = document.createElement('div');
-  wrap.className = 'blue-block';
+  wrap.className = 'gold-block';
 
   const codeEl = document.createElement('code');
   codeEl.textContent = code;
   if (id) codeEl.id = id;
 
   const btn = document.createElement('button');
-  btn.className = 'blue-btn';
+  btn.className = 'gold-btn';
   btn.textContent = '📋 Copy';
   btn.addEventListener('click', function(e) {
     e.stopPropagation();
@@ -221,9 +221,9 @@ function renderFonts(category) {
 }
 
 // ── Filter buttons ──
-document.getElementById('filter-bar').addEventListener('click', function(e) {
-  if (!e.target.matches('.filter-btn')) return;
-  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+document.getElementById('font-family-options').addEventListener('click', function(e) {
+  if (!e.target.matches('.nav-btn')) return;
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
   e.target.classList.add('active');
   renderFonts(e.target.dataset.cat);
 });
@@ -262,5 +262,5 @@ loadFonts();
     }
 
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/Google-Fonts/service_worker.js');
+      navigator.serviceWorker.register('/Google-Fonts/google_fonts_service_worker.js');
     }
