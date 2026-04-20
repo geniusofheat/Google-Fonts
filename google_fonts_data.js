@@ -57,16 +57,23 @@ function getWeightNumber(variant) {
 }
 
 // ─────────────────────────────────────────────
+// Clear both static code boxes
+// ─────────────────────────────────────────────
+function clearCodeBoxes() {
+  document.getElementById('static-code-1').textContent = '';
+  document.getElementById('static-code-2').textContent = '';
+}
+
+// ─────────────────────────────────────────────
 // Toggle expanded weight panel on a font card
 // ─────────────────────────────────────────────
 function toggleVariants(card, font) {
   const existing = card.querySelector('.font-expanded');
 
-  // Collapsing — remove panel and clear both static code boxes
+  // Collapsing — remove panel and clear static code boxes
   if (existing) {
     existing.remove();
-    document.getElementById('static-code-1').textContent = '';
-    document.getElementById('static-code-2').textContent = '';
+    clearCodeBoxes();
     return;
   }
 
@@ -117,7 +124,9 @@ function toggleVariants(card, font) {
     row.addEventListener('click', function(e) {
       e.stopPropagation();
 
-      // Remove any existing inline code boxes from other rows
+      const alreadyOpen = row.querySelector('.inline-codeboxes');
+
+      // Remove inline code boxes from ALL rows in this panel
       panel.querySelectorAll('.inline-codeboxes').forEach(function(el) {
         el.remove();
       });
@@ -127,23 +136,28 @@ function toggleVariants(card, font) {
         r.style.borderColor = '';
       });
 
-      // Highlight this row
+      // If this row was already open — just collapse it and clear boxes
+      if (alreadyOpen) {
+        clearCodeBoxes();
+        return;
+      }
+
+      // Otherwise open this row
       row.style.borderColor = 'var(--gold)';
 
-      // Build the link tag code
+      // Build codes
       const linkCode = '<link href="https://fonts.googleapis.com/css2?family=' +
         font.family.replace(/\s+/g, '+') + '&display=swap" rel="stylesheet">';
 
-      // Build the CSS rules code
       let cssCode = "font-family: '" + font.family + "', " + font.category + ';\n' +
                     'font-weight: ' + weightNum + ';';
       if (isItalic) cssCode += '\nfont-style: italic;';
 
-      // Also update the static code boxes at the bottom
+      // Update static code boxes at bottom of page
       document.getElementById('static-code-1').textContent = linkCode;
       document.getElementById('static-code-2').textContent = cssCode;
 
-      // Build inline code box wrapper that appears inside this row
+      // Build inline code box wrapper
       const inlineBoxes = document.createElement('div');
       inlineBoxes.className = 'inline-codeboxes';
 
@@ -200,7 +214,7 @@ function toggleVariants(card, font) {
       inlineWrap2.appendChild(inlineBtn2);
       inlineBoxes.appendChild(inlineWrap2);
 
-      // Append inline boxes directly inside the tapped row
+      // Append inline boxes inside the tapped row
       row.appendChild(inlineBoxes);
     });
 
