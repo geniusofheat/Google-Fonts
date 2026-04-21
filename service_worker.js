@@ -5,7 +5,7 @@ const ASSETS = [
   '/Google-Fonts/index.html',
   '/Google-Fonts/google_fonts.css',
   '/Google-Fonts/google_fonts_data.js',
-  '/Google-Fonts/google_fonts_manifest.json',
+  '/Google-Fonts/manifest.json',
   '/Google-Fonts/icons/icon_192.png',
   '/Google-Fonts/icons/icon_512.png'
 ];
