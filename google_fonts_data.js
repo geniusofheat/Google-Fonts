@@ -3,10 +3,25 @@ const API_KEY = 'AIzaSyC941rSK-K3iehOd2osiSv7PPQV6MYl0Ac';
 
 // ── Font categories ──
 const CATEGORIES = ['serif', 'sans-serif', 'monospace', 'display', 'handwriting'];
-let allFonts       = [];
+let allFonts        = [];
 let currentCategory = 'all';
 let currentLetter   = '';
 let currentSearch   = '';
+
+// ─────────────────────────────────────────────
+// Strip style words so "Lora Italic" finds "Lora"
+// ─────────────────────────────────────────────
+const STYLE_WORDS = ['italic', 'bold', 'light', 'thin', 'regular', 'medium',
+                     'black', 'extra', 'semi', 'condensed', 'oblique', 'variable'];
+
+function cleanQuery(raw) {
+  return raw
+    .toLowerCase()
+    .split(' ')
+    .filter(function(w) { return !STYLE_WORDS.includes(w); })
+    .join(' ')
+    .trim();
+}
 
 // ─────────────────────────────────────────────
 // Load a font face into the browser
@@ -68,6 +83,56 @@ function clearCodeBoxes() {
 }
 
 // ─────────────────────────────────────────────
+// Dropdown suggestions
+// ─────────────────────────────────────────────
+function showSuggestions(query) {
+  const dropdown = document.getElementById('search-dropdown');
+  if (!dropdown) return;
+
+  const cleaned = cleanQuery(query);
+  if (!cleaned) {
+    dropdown.innerHTML = '';
+    dropdown.style.display = 'none';
+    return;
+  }
+
+  const matches = allFonts
+    .filter(function(f) {
+      return f.family.toLowerCase().includes(cleaned);
+    })
+    .slice(0, 8);
+
+  if (matches.length === 0) {
+    dropdown.innerHTML = '';
+    dropdown.style.display = 'none';
+    return;
+  }
+
+  dropdown.innerHTML = '';
+  matches.forEach(function(font) {
+    const item = document.createElement('div');
+    item.className = 'dropdown-item';
+    item.textContent = font.family;
+    item.addEventListener('mousedown', function() {
+      document.getElementById('font-search').value = font.family;
+      currentSearch = font.family;
+      currentLetter = '';
+      document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
+      dropdown.style.display = 'none';
+      renderFonts();
+    });
+    dropdown.appendChild(item);
+  });
+
+  dropdown.style.display = 'block';
+}
+
+function hideSuggestions() {
+  const dropdown = document.getElementById('search-dropdown');
+  if (dropdown) dropdown.style.display = 'none';
+}
+
+// ─────────────────────────────────────────────
 // Toggle expanded weight panel on a font card
 // ─────────────────────────────────────────────
 function toggleVariants(card, font) {
@@ -124,13 +189,8 @@ function toggleVariants(card, font) {
 
       const alreadyOpen = row.querySelector('.inline-codeboxes');
 
-      panel.querySelectorAll('.inline-codeboxes').forEach(function(el) {
-        el.remove();
-      });
-
-      panel.querySelectorAll('.card').forEach(function(r) {
-        r.style.borderColor = '';
-      });
+      panel.querySelectorAll('.inline-codeboxes').forEach(function(el) { el.remove(); });
+      panel.querySelectorAll('.card').forEach(function(r) { r.style.borderColor = ''; });
 
       if (alreadyOpen) {
         clearCodeBoxes();
@@ -159,10 +219,8 @@ function toggleVariants(card, font) {
 
       const inlineWrap1 = document.createElement('div');
       inlineWrap1.className = 'gold-block';
-
       const inlineCode1 = document.createElement('code');
       inlineCode1.textContent = linkCode;
-
       const inlineBtn1 = document.createElement('button');
       inlineBtn1.className = 'gold-btn';
       inlineBtn1.textContent = '📋 Copy';
@@ -173,7 +231,6 @@ function toggleVariants(card, font) {
           setTimeout(function() { inlineBtn1.textContent = '📋 Copy'; }, 2000);
         });
       });
-
       inlineWrap1.appendChild(inlineCode1);
       inlineWrap1.appendChild(inlineBtn1);
       inlineBoxes.appendChild(inlineWrap1);
@@ -184,10 +241,8 @@ function toggleVariants(card, font) {
 
       const inlineWrap2 = document.createElement('div');
       inlineWrap2.className = 'gold-block';
-
       const inlineCode2 = document.createElement('code');
       inlineCode2.textContent = cssCode;
-
       const inlineBtn2 = document.createElement('button');
       inlineBtn2.className = 'gold-btn';
       inlineBtn2.textContent = '📋 Copy';
@@ -198,7 +253,6 @@ function toggleVariants(card, font) {
           setTimeout(function() { inlineBtn2.textContent = '📋 Copy'; }, 2000);
         });
       });
-
       inlineWrap2.appendChild(inlineCode2);
       inlineWrap2.appendChild(inlineBtn2);
       inlineBoxes.appendChild(inlineWrap2);
@@ -240,6 +294,7 @@ function buildAZRow() {
       }
       currentSearch = '';
       document.getElementById('font-search').value = '';
+      hideSuggestions();
       renderFonts();
     });
     row.appendChild(btn);
@@ -257,6 +312,7 @@ function renderFonts(category) {
     document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
     const searchEl = document.getElementById('font-search');
     if (searchEl) searchEl.value = '';
+    hideSuggestions();
   }
 
   const container = document.getElementById('font-container');
@@ -274,8 +330,9 @@ function renderFonts(category) {
     }
 
     if (currentSearch) {
+      const cleaned = cleanQuery(currentSearch);
       fonts = fonts.filter(function(f) {
-        return f.family.toLowerCase().includes(currentSearch.toLowerCase());
+        return f.family.toLowerCase().includes(cleaned);
       });
     }
 
@@ -319,20 +376,37 @@ function renderFonts(category) {
 // ─────────────────────────────────────────────
 document.getElementById('font-family-options').addEventListener('click', function(e) {
   if (!e.target.matches('.nav-btn')) return;
-  document.querySelectorAll('.nav-btn').forEach(function(b) {
-    b.classList.remove('active');
-  });
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
   e.target.classList.add('active');
   renderFonts(e.target.dataset.cat);
 });
 
 // ─────────────────────────────────────────────
-// Search bar input listener
+// Search bar listeners
 // ─────────────────────────────────────────────
 document.getElementById('font-search').addEventListener('input', function() {
-  currentSearch = this.value.trim();
+  showSuggestions(this.value);
+});
+
+document.getElementById('font-search').addEventListener('keyup', function(e) {
+  if (e.key === 'Enter' || e.keyCode === 13) {
+    currentSearch = cleanQuery(this.value.trim());
+    currentLetter = '';
+    document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
+    hideSuggestions();
+    renderFonts();
+  }
+});
+
+document.getElementById('font-search').addEventListener('blur', function() {
+  setTimeout(hideSuggestions, 150);
+});
+
+document.getElementById('search-btn').addEventListener('click', function() {
+  currentSearch = cleanQuery(document.getElementById('font-search').value.trim());
   currentLetter = '';
   document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
+  hideSuggestions();
   renderFonts();
 });
 

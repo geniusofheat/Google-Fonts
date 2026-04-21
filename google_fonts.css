@@ -331,3 +331,21 @@ code {
   font-size: 0.6rem;
   color: #555;
 }
+#search-wrap { display: flex; gap: 5px; align-items: center; margin: 12px 0 8px; }
+#search-btn { padding: 10px 14px; font-size: 1rem; border: 2px solid var(--gold); border-radius: 8px; background: #0d1b2a; color: var(--gold); cursor: pointer; }
+
+#search-dropdown {
+  background: #0d1b2a;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  display: none;
+  margin-top: 4px;
+}
+.dropdown-item {
+  padding: 10px 14px;
+  color: #fff;
+  cursor: pointer;
+  border-bottom: 1px solid #1e3a5f;
+}
+.dropdown-item:last-child { border-bottom: none; }
+.dropdown-item:active { background: #1e3a5f; }
