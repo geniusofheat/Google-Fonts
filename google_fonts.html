@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Fonts Browser</title>
+  <link rel="manifest" href="google_fonts_manifest.json">
+  <meta name="theme-color" content="#c8a96e">
+  <link rel="stylesheet" href="google_fonts.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Space+Mono&family=Lato:wght@400;700&family=Bree+Serif&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ── Section 1 : Header and Nav ── -->
+<div class="section">
+
+  <h3>Google Fonts :</h3>
+  <p>Please choose a font type.</p>
+
+  <!-- NAV ROW -->
+  <div class="nav-row" id="font-family-options">
+    <button class="nav-btn" data-cat="all">All</button>
+    <button class="nav-btn" data-cat="serif">Serif</button>
+    <button class="nav-btn" data-cat="sans-serif">Sans-Serif</button>
+    <button class="nav-btn" data-cat="monospace">Monospace</button>
+    <button class="nav-btn" data-cat="display">Display</button>
+    <button class="nav-btn" data-cat="handwriting">Handwriting</button>
+  </div><!-- ENDS NAV-ROW -->
+
+  <hr>
+
+</div><!-- ENDS SECTION 1 -->
+
+<!-- ── Section 2 : Font List and Codeboxes ── -->
+<div class="section">
+
+  <!-- FONT LIST -->
+  <div id="font-container" class="hidden"></div>
+  <!-- ENDS FONT LIST -->
+
+  <!-- CODEBOX 1 -->
+  <h4>Codebox #1 : Font retrieval link</h4>
+  <p>Each font has to be retrieved from the Google cloud server. Copy the link below and add it to the head section of your HTML.</p>
+
+  <div class="gold-block">
+    <code id="static-code-1"></code>
+    <button class="gold-btn" id="copy-btn-1" onclick="copyStatic('static-code-1','copy-btn-1')">📋 Copy</button>
+  </div>
+  <!-- ENDS CODEBOX 1 -->
+
+  <!-- CODEBOX 2 -->
+  <h4>Codebox #2 : CSS Rules</h4>
+  <p>Copy and paste this code into your stylesheet.</p>
+
+  <div class="gold-block">
+    <code id="static-code-2"></code>
+    <button class="gold-btn" id="copy-btn-2" onclick="copyStatic('static-code-2','copy-btn-2')">📋 Copy</button>
+  </div>
+  <!-- ENDS CODEBOX 2 -->
+
+</div><!-- ENDS SECTION 2 -->
+
+<script src="google_fonts_data.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/Google-Fonts/google_fonts_service_worker.js');
+}
+</script>
+
+</body>
+</html>
