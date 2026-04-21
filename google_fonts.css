@@ -1,5 +1,5 @@
 /* ================================================================
-   GOOGLE FONTS BROWSER — Stylesheet
+   GOOGLE FONTS BROWSER — Stylesheet (CLEANED)
    ================================================================ */
 
 /* ── Variable definitions ── */
@@ -124,15 +124,9 @@ ol {
   transition: background 0.2s, color 0.2s;
 }
 
-.nav-btn:active {
-  background: var(--gold);
-  color: #0a0904;
-}
-
 .nav-btn.active {
   background: var(--gold);
   color: #0a0904;
-  font-weight: 700;
 }
 
 .gold-btn {
@@ -210,14 +204,6 @@ ol {
   border-color: var(--gold);
 }
 
-/* Nested card — weight rows inside expanded panel */
-.card .card {
-  border-radius: 8px;
-  margin: 4px 2px;
-  padding: 8px 10px;
-  cursor: pointer;
-}
-
 .card::before {
   content: '◆';
   position: absolute;
@@ -226,6 +212,13 @@ ol {
   color: rgba(200,169,110,0.08);
   font-size: 26px;
   pointer-events: none;
+}
+
+/* Nested cards */
+.card .card {
+  border-radius: 8px;
+  margin: 4px 2px;
+  padding: 8px 10px;
 }
 
 /* ================================================================
@@ -263,6 +256,7 @@ code {
   white-space: pre-wrap;
   line-height: 1.6;
   min-height: 20px;
+  overflow-x: auto;
 }
 
 /* ================================================================
@@ -276,21 +270,13 @@ code {
 }
 
 /* ================================================================
-   MENU LIST
+   SEARCH + AZ
    ================================================================ */
 
-.menu {
-  margin-left: 18px;
-  padding: 4px 0;
-}
-
-.menu li {
-  margin: 8px 0;
-  color: var(--text);
-  font-size: 13px;
-  line-height: 1.5;
-}
 #search-wrap {
+  display: flex;
+  gap: 5px;
+  align-items: center;
   margin: 12px 0 8px;
 }
 
@@ -302,7 +288,16 @@ code {
   border-radius: 8px;
   background: #0d1b2a;
   color: #fff;
-  box-sizing: border-box;
+}
+
+#search-btn {
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  background: #0d1b2a;
+  color: var(--gold);
+  cursor: pointer;
 }
 
 #az-row {
@@ -331,8 +326,10 @@ code {
   font-size: 0.6rem;
   color: #555;
 }
-#search-wrap { display: flex; gap: 5px; align-items: center; margin: 12px 0 8px; }
-#search-btn { padding: 10px 14px; font-size: 1rem; border: 2px solid var(--gold); border-radius: 8px; background: #0d1b2a; color: var(--gold); cursor: pointer; }
+
+/* ================================================================
+   DROPDOWN
+   ================================================================ */
 
 #search-dropdown {
   background: #0d1b2a;
@@ -341,11 +338,59 @@ code {
   display: none;
   margin-top: 4px;
 }
+
 .dropdown-item {
   padding: 10px 14px;
   color: #fff;
   cursor: pointer;
   border-bottom: 1px solid #1e3a5f;
 }
-.dropdown-item:last-child { border-bottom: none; }
-.dropdown-item:active { background: #1e3a5f; }
+
+.dropdown-item:active {
+  background: #1e3a5f;
+}
+
+/* ================================================================
+   FONT PREVIEW TOOLING (ACTIVE SYSTEM)
+   ================================================================ */
+
+.font-preview-tools {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #111;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.font-preview-tools input[type="text"] {
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+}
+
+.font-preview-tools input[type="range"] {
+  width: 100%;
+}
+
+.font-preview-tools button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #c8a96e;
+  color: black;
+  font-weight: bold;
+}
+
+.font-preview-tools input[type="color"] {
+  height: 40px;
+  border: none;
+  padding: 0;
+}
+
+.font-preview-text {
+  min-height: 50px;
+  word-break: break-word;
+}
