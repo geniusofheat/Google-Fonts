@@ -6,8 +6,8 @@ const ASSETS = [
   '/Google-Fonts/google_fonts.css',
   '/Google-Fonts/google_fonts_data.js',
   '/Google-Fonts/manifest.json',
-  '/Google-Fonts/icons/icon_192.png',
-  '/Google-Fonts/icons/icon_512.png'
+  '/Google-Fonts/icons/app_icon_192.png',
+  '/Google-Fonts/icons/app_icon_512.png'
 ];
 
 // Install — cache all core assets
