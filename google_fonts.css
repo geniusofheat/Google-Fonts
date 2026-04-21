@@ -290,3 +290,44 @@ code {
   font-size: 13px;
   line-height: 1.5;
 }
+#search-wrap {
+  margin: 12px 0 8px;
+}
+
+#font-search {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  background: #0d1b2a;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+#az-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 12px;
+}
+
+.az-btn {
+  font-size: 0.72rem;
+  color: var(--gold);
+  cursor: pointer;
+  padding: 2px 3px;
+  border-radius: 4px;
+}
+
+.az-btn.active {
+  background: var(--gold);
+  color: #0d1b2a;
+  font-weight: bold;
+}
+
+.az-dot {
+  font-size: 0.6rem;
+  color: #555;
+}

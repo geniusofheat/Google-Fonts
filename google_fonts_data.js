@@ -3,7 +3,10 @@ const API_KEY = 'AIzaSyC941rSK-K3iehOd2osiSv7PPQV6MYl0Ac';
 
 // ── Font categories ──
 const CATEGORIES = ['serif', 'sans-serif', 'monospace', 'display', 'handwriting'];
-let allFonts = [];
+let allFonts       = [];
+let currentCategory = 'all';
+let currentLetter   = '';
+let currentSearch   = '';
 
 // ─────────────────────────────────────────────
 // Load a font face into the browser
@@ -70,31 +73,26 @@ function clearCodeBoxes() {
 function toggleVariants(card, font) {
   const existing = card.querySelector('.font-expanded');
 
-  // Collapsing — remove panel and clear static code boxes
   if (existing) {
     existing.remove();
     clearCodeBoxes();
     return;
   }
 
-  // Expanding — build the weight list panel
   const panel = document.createElement('div');
   panel.className = 'font-expanded';
 
-  // Heading
   const heading = document.createElement('div');
   heading.className = 'blue-block';
   heading.textContent = '◆ Step 1 : Tap a weight ◆';
   panel.appendChild(heading);
 
-  // Tip
   const tip = document.createElement('p');
   tip.className = 'tip-box';
   tip.textContent = font.family + ' has ' + font.variants.length + ' style' +
     (font.variants.length > 1 ? 's' : '') + '. Tap one to see the code.';
   panel.appendChild(tip);
 
-  // One row per weight variant
   Object.entries(font.files).forEach(function(entry) {
     const variant     = entry[0];
     const fileUrl     = entry[1];
@@ -126,26 +124,21 @@ function toggleVariants(card, font) {
 
       const alreadyOpen = row.querySelector('.inline-codeboxes');
 
-      // Remove inline code boxes from ALL rows in this panel
       panel.querySelectorAll('.inline-codeboxes').forEach(function(el) {
         el.remove();
       });
 
-      // Clear highlight on all rows
       panel.querySelectorAll('.card').forEach(function(r) {
         r.style.borderColor = '';
       });
 
-      // If this row was already open — just collapse it and clear boxes
       if (alreadyOpen) {
         clearCodeBoxes();
         return;
       }
 
-      // Otherwise open this row
       row.style.borderColor = 'var(--gold)';
 
-      // Build codes
       const linkCode = '<link href="https://fonts.googleapis.com/css2?family=' +
         font.family.replace(/\s+/g, '+') + '&display=swap" rel="stylesheet">';
 
@@ -153,15 +146,12 @@ function toggleVariants(card, font) {
                     'font-weight: ' + weightNum + ';';
       if (isItalic) cssCode += '\nfont-style: italic;';
 
-      // Update static code boxes at bottom of page
       document.getElementById('static-code-1').textContent = linkCode;
       document.getElementById('static-code-2').textContent = cssCode;
 
-      // Build inline code box wrapper
       const inlineBoxes = document.createElement('div');
       inlineBoxes.className = 'inline-codeboxes';
 
-      // Inline box 1
       const inlineLabel1 = document.createElement('p');
       inlineLabel1.textContent = 'Step 2 : Add to your HTML head';
       inlineLabel1.style.marginTop = '8px';
@@ -188,7 +178,6 @@ function toggleVariants(card, font) {
       inlineWrap1.appendChild(inlineBtn1);
       inlineBoxes.appendChild(inlineWrap1);
 
-      // Inline box 2
       const inlineLabel2 = document.createElement('p');
       inlineLabel2.textContent = 'Step 3 : Add to your stylesheet';
       inlineBoxes.appendChild(inlineLabel2);
@@ -214,7 +203,6 @@ function toggleVariants(card, font) {
       inlineWrap2.appendChild(inlineBtn2);
       inlineBoxes.appendChild(inlineWrap2);
 
-      // Append inline boxes inside the tapped row
       row.appendChild(inlineBoxes);
     });
 
@@ -225,51 +213,102 @@ function toggleVariants(card, font) {
 }
 
 // ─────────────────────────────────────────────
-// Render the font list for a given category
+// Build A–Z letter row
+// ─────────────────────────────────────────────
+function buildAZRow() {
+  const row = document.getElementById('az-row');
+  if (!row) return;
+  row.innerHTML = '';
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(function(letter, i) {
+    if (i > 0) {
+      const dot = document.createElement('span');
+      dot.className = 'az-dot';
+      dot.textContent = '·';
+      row.appendChild(dot);
+    }
+    const btn = document.createElement('span');
+    btn.className = 'az-btn';
+    btn.textContent = letter;
+    btn.addEventListener('click', function() {
+      if (currentLetter === letter) {
+        currentLetter = '';
+        btn.classList.remove('active');
+      } else {
+        currentLetter = letter;
+        document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+      }
+      currentSearch = '';
+      document.getElementById('font-search').value = '';
+      renderFonts();
+    });
+    row.appendChild(btn);
+  });
+}
+
+// ─────────────────────────────────────────────
+// Render the font list
 // ─────────────────────────────────────────────
 function renderFonts(category) {
+  if (category !== undefined) {
+    currentCategory = category;
+    currentLetter   = '';
+    currentSearch   = '';
+    document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
+    const searchEl = document.getElementById('font-search');
+    if (searchEl) searchEl.value = '';
+  }
+
   const container = document.getElementById('font-container');
   container.innerHTML = '';
 
-  const cats = category === 'all' ? CATEGORIES : [category];
+  const cats = currentCategory === 'all' ? CATEGORIES : [currentCategory];
 
   cats.forEach(function(cat) {
-    const fonts = allFonts.filter(function(f) { return f.category === cat; });
+    let fonts = allFonts.filter(function(f) { return f.category === cat; });
+
+    if (currentLetter) {
+      fonts = fonts.filter(function(f) {
+        return f.family.toUpperCase().startsWith(currentLetter);
+      });
+    }
+
+    if (currentSearch) {
+      fonts = fonts.filter(function(f) {
+        return f.family.toLowerCase().includes(currentSearch.toLowerCase());
+      });
+    }
+
+    if (currentLetter || currentSearch) {
+      fonts.sort(function(a, b) { return a.family.localeCompare(b.family); });
+    }
+
     if (fonts.length === 0) return;
 
-    // Category heading
     const catCard = document.createElement('div');
     catCard.className = 'card';
-
     const catTitle = document.createElement('div');
     catTitle.className = 'blue-block';
     catTitle.textContent = '◆ ' + cat.replace('-', ' ').toUpperCase() + ' (' + fonts.length + ') ◆';
     catCard.appendChild(catTitle);
     container.appendChild(catCard);
 
-    // Font cards
     fonts.forEach(function(font) {
       const card = document.createElement('div');
       card.className = 'card';
-
       const safeName = font.family.replace(/\s+/g, '_') + '_preview';
       loadFontFace(safeName, font.menu);
-
       const nameEl = document.createElement('h4');
       nameEl.style.fontFamily = '"' + safeName + '", serif';
       nameEl.textContent = font.family;
-
       const meta = document.createElement('p');
       meta.textContent = font.variants.length + ' style' +
         (font.variants.length > 1 ? 's' : '') + ' — tap to expand';
-
       card.appendChild(nameEl);
       card.appendChild(meta);
-
       card.addEventListener('click', function() {
         toggleVariants(card, font);
       });
-
       container.appendChild(card);
     });
   });
@@ -288,6 +327,16 @@ document.getElementById('font-family-options').addEventListener('click', functio
 });
 
 // ─────────────────────────────────────────────
+// Search bar input listener
+// ─────────────────────────────────────────────
+document.getElementById('font-search').addEventListener('input', function() {
+  currentSearch = this.value.trim();
+  currentLetter = '';
+  document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
+  renderFonts();
+});
+
+// ─────────────────────────────────────────────
 // Fetch fonts from Google Fonts API
 // ─────────────────────────────────────────────
 async function loadFonts() {
@@ -300,6 +349,7 @@ async function loadFonts() {
     allFonts   = data.items;
     container.classList.remove('hidden');
     renderFonts('all');
+    buildAZRow();
   } catch (err) {
     container.classList.remove('hidden');
     const errCard = document.createElement('div');
