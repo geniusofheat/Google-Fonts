@@ -218,12 +218,12 @@ function toggleVariants(card, font) {
 
   // ── Step 1 heading ──
   const heading = document.createElement('div');
-  heading.className = 'blue-block';
-  heading.textContent = '◆ Step 1 : Choose a weight ◆';
+  heading.className = '';
+  heading.textContent = '◆ Step 1 : Select Font ◆';
   panel.appendChild(heading);
 
   const tip = document.createElement('p');
-  tip.className = 'tip-box';
+  tip.className = '';
   tip.textContent = font.family + ' has ' + font.variants.length + ' style' +
     (font.variants.length > 1 ? 's' : '') + '. Tap one to preview.';
   panel.appendChild(tip);
@@ -234,9 +234,9 @@ function toggleVariants(card, font) {
 
   // ── Step 2 heading ──
   const toolHeading = document.createElement('div');
-  toolHeading.className = 'blue-block';
+  toolHeading.className = '';
   toolHeading.style.marginTop = '12px';
-  toolHeading.textContent = '◆ Step 2 : Adjust style ◆';
+  toolHeading.textContent = '◆ Step 2 : Change Styles ◆';
 
   // ── Toolbar ──
   const toolbar = document.createElement('div');
@@ -286,14 +286,14 @@ function toggleVariants(card, font) {
 
   // ── Inline code boxes with labels and descriptions ──
   const box1 = makeGoldBlock(
-    'Codebox #1 : Font retrieval link',
-    ['Each font has to be retrieved from the Google cloud server. Copy the link below and add it to the head section of your HTML.']
+    'Step 1 : Link to google fonts',
+    ['Each font has to be retrieved from the Google cloud server. Once you choose a font the codebox will provide you with link code. Copy the link from the codebox and paste it to the head section of your HTML.']
   );
 
   const box2 = makeGoldBlock(
-    'Codebox #2 : CSS Rules',
+    'Step 2 : CSS Rules',
     [
-      'Use the toolbar to change the font styles. The changes will be reflected on the font preview.',
+      'Use the toolbar to change the font styles. The changes will be reflected on the font preview and added to codebox 2.',
       'The font family name and its attributes are created in the output codebox below. Copy and paste the style attributes into your stylesheet.'
     ]
   );
