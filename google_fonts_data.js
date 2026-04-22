@@ -402,9 +402,10 @@ function toggleVariants(card, font) {
   if (firstBtn) firstBtn.classList.add('active');
 
   // ── Assemble panel ──
-  panel.appendChild(variantWrap);
+  
   panel.appendChild(toolHeading);
   panel.appendChild(box1.wrap);
+  panel.appendChild(variantWrap);
   panel.appendChild(toolbar);
   panel.appendChild(preview);
   
