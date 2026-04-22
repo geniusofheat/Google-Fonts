@@ -654,3 +654,47 @@ code {
 #font-preview-text::placeholder {
   color: var(--text-muted);
 }
+/* ================================================================
+   FONT NAMES LIST — numbered ordered list, full width
+   ================================================================ */
+
+.font-names-list {
+  list-style: decimal;
+  margin: 8px 0 8px 24px;
+  padding: 0;
+  width: 100%;
+}
+
+.font-list-item {
+  font-size: 18px;
+  color: var(--gold);
+  cursor: pointer;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--gold-border);
+  transition: background 0.2s, color 0.2s;
+  border-radius: 4px;
+}
+
+.font-list-item:last-child {
+  border-bottom: none;
+}
+
+.font-list-item:active,
+.font-list-item.active {
+  background: var(--gold);
+  color: #0a0904;
+  font-weight: bold;
+}
+
+/* ================================================================
+   PAGE NAV ROW — [ 1–5 ] [ 6–10 ] buttons
+   ================================================================ */
+
+#font-page-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  padding: 6px 4px;
+  margin-bottom: 4px;
+}

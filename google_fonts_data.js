@@ -5,16 +5,17 @@ const API_KEY = 'AIzaSyC941rSK-K3iehOd2osiSv7PPQV6MYl0Ac';
 
 // ── CORE STATE ───────────────────────────────────────────────
 const CATEGORIES = ['serif', 'sans-serif', 'monospace', 'display', 'handwriting'];
-let allFonts        = [];
+let allFonts      = [];
 let currentCategory = 'all';
-let currentLetter   = '';
 let currentSearch   = '';
-let selectedFont    = null;   // the font object the user tapped
+let selectedFont    = null;
+let filteredFonts   = [];
+let currentPage     = 0;
+const PAGE_SIZE     = 5;
 // ── END CORE STATE ───────────────────────────────────────────
 
 
 // ── UTILITY : CLEAN SEARCH QUERY ─────────────────────────────
-// Strips style words so "Lora Italic" finds "Lora"
 const STYLE_WORDS = ['italic','bold','light','thin','regular','medium',
                      'black','extra','semi','condensed','oblique','variable'];
 
@@ -38,7 +39,6 @@ function loadFontFace(name, url) {
 
 
 // ── UTILITY : COPY STATIC CODE BOX ───────────────────────────
-// Called by onclick on copy buttons in HTML
 function copyStatic(codeId, btnId) {
   const code = document.getElementById(codeId).textContent.trim();
   const btn  = document.getElementById(btnId);
@@ -63,20 +63,15 @@ function getWeightNumber(variant) {
 
 
 // ── PAGE SECTION 1 : UPDATE ALL PREVIEW BOXES ────────────────
-// Updates font-family-preview, font-size-preview,
-// font-weight-preview, font-color-preview
-// with current font + control values
 function updateAllPreviews() {
   const previewText = document.getElementById('font-preview-text').value.trim()
     || (selectedFont ? selectedFont.family : 'Preview');
 
-  const size    = document.getElementById('font-size-control').value + 'px';
-  const weight  = document.getElementById('font-weight-control').value;
-  const color   = document.getElementById('color-picker').value;
+  const size     = document.getElementById('font-size-control').value + 'px';
+  const weight   = document.getElementById('font-weight-control').value;
+  const color    = document.getElementById('color-picker').value;
   const isItalic = document.getElementById('italic-toggle').classList.contains('active');
-  const fontFamily = selectedFont
-    ? '"' + selectedFont.family + '", serif'
-    : 'inherit';
+  const fontFamily = selectedFont ? '"' + selectedFont.family + '", serif' : 'inherit';
 
   const previews = [
     document.getElementById('font-family-preview'),
@@ -87,12 +82,12 @@ function updateAllPreviews() {
 
   previews.forEach(function(el) {
     if (!el) return;
-    el.textContent       = previewText;
-    el.style.fontFamily  = fontFamily;
-    el.style.fontSize    = size;
-    el.style.fontWeight  = weight;
-    el.style.fontStyle   = isItalic ? 'italic' : 'normal';
-    el.style.color       = color;
+    el.textContent      = previewText;
+    el.style.fontFamily = fontFamily;
+    el.style.fontSize   = size;
+    el.style.fontWeight = weight;
+    el.style.fontStyle  = isItalic ? 'italic' : 'normal';
+    el.style.color      = color;
   });
 
   syncCodeBoxes();
@@ -101,7 +96,6 @@ function updateAllPreviews() {
 
 
 // ── PAGE SECTION 2 : SYNC CODE BOXES ─────────────────────────
-// Updates static-code-1 (link tag) and static-code-2 (CSS rules)
 function syncCodeBoxes() {
   if (!selectedFont) return;
 
@@ -129,7 +123,6 @@ function syncCodeBoxes() {
 
 
 // ── PAGE SECTION 3 : SEARCH DROPDOWN ─────────────────────────
-// Matches <div id="search-dropdown"> in index.html
 function showSuggestions(query) {
   const dropdown = document.getElementById('search-dropdown');
   if (!dropdown) return;
@@ -145,13 +138,12 @@ function showSuggestions(query) {
   dropdown.innerHTML = '';
   matches.forEach(function(font) {
     const item = document.createElement('div');
-    item.className = 'dropdown-item';
+    item.className   = 'dropdown-item';
     item.textContent = font.family;
 
     function selectFromDropdown() {
       document.getElementById('font-search').value = font.family;
       currentSearch = font.family;
-      currentLetter = '';
       document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
       hideSuggestions();
       renderFontList();
@@ -174,35 +166,114 @@ function hideSuggestions() {
 // ── END PAGE SECTION 3 : SEARCH DROPDOWN ─────────────────────
 
 
-// ── PAGE SECTION 4 : RENDER FONT LIST ────────────────────────
-// Populates font-list with compact inline font names + bullets
-// Updates info badges: font-list-category, total, showing
-function renderFontList(category) {
-  if (category !== undefined) {
-    currentCategory = category;
-    currentLetter   = '';
-    currentSearch   = '';
-    document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
-    const searchEl = document.getElementById('font-search');
-    if (searchEl) searchEl.value = '';
-    hideSuggestions();
-  }
+// ── PAGE SECTION 4 : RENDER PAGE NAV ROW ─────────────────────
+// Builds [ 1–5 ] [ 6–10 ] [ 11–15 ] buttons above font list
+function renderPageNav() {
+  const nav = document.getElementById('font-page-nav');
+  if (!nav) return;
+  nav.innerHTML = '';
 
+  const totalPages = Math.ceil(filteredFonts.length / PAGE_SIZE);
+  if (totalPages <= 1) return;
+
+  for (var i = 0; i < totalPages; i++) {
+    var start = i * PAGE_SIZE + 1;
+    var end   = Math.min((i + 1) * PAGE_SIZE, filteredFonts.length);
+    var btn   = document.createElement('button');
+    btn.className    = i === currentPage ? 'gold-btn-active' : 'gold-btn';
+    btn.textContent  = start + '–' + end;
+    btn.dataset.page = i;
+
+    btn.addEventListener('click', function(e) {
+      currentPage = parseInt(e.target.dataset.page);
+      renderFontPage();
+      nav.querySelectorAll('button').forEach(function(b) { b.className = 'gold-btn'; });
+      e.target.className = 'gold-btn-active';
+    });
+
+    nav.appendChild(btn);
+  }
+}
+// ── END PAGE SECTION 4 : RENDER PAGE NAV ROW ─────────────────
+
+
+// ── PAGE SECTION 5 : RENDER FONT PAGE ────────────────────────
+// Shows 5 fonts for the current page as a numbered ordered list
+function renderFontPage() {
   const list = document.getElementById('font-list');
   if (!list) return;
   list.innerHTML = '';
 
+  const start = currentPage * PAGE_SIZE;
+  const end   = Math.min(start + PAGE_SIZE, filteredFonts.length);
+  const page  = filteredFonts.slice(start, end);
+
+  if (page.length === 0) {
+    const none = document.createElement('p');
+    none.textContent = 'No fonts found.';
+    list.appendChild(none);
+    return;
+  }
+
+  const ol = document.createElement('ol');
+  ol.className = 'font-names-list';
+  ol.start     = start + 1;
+
+  page.forEach(function(font) {
+    const safeName = font.family.replace(/\s+/g, '_') + '_preview';
+    loadFontFace(safeName, font.menu);
+
+    const li = document.createElement('li');
+    li.className       = 'font-list-item';
+    li.textContent     = font.family;
+    li.style.fontFamily = '"' + safeName + '", serif';
+
+    li.addEventListener('click', function() {
+      // Mark active
+      ol.querySelectorAll('.font-list-item').forEach(function(item) {
+        item.classList.remove('active');
+      });
+      li.classList.add('active');
+
+      // Set selected font
+      selectedFont = font;
+
+      // Load first variant
+      const firstVariant = Object.keys(font.files)[0];
+      const firstSafe    = font.family.replace(/\s+/g, '_') + '_' + firstVariant;
+      loadFontFace(firstSafe, font.files[firstVariant]);
+
+      // Update weight dropdown
+      const weightEl = document.getElementById('font-weight-control');
+      if (weightEl) weightEl.value = getWeightNumber(firstVariant);
+
+      updateAllPreviews();
+    });
+
+    ol.appendChild(li);
+  });
+
+  list.appendChild(ol);
+}
+// ── END PAGE SECTION 5 : RENDER FONT PAGE ────────────────────
+
+
+// ── PAGE SECTION 6 : RENDER FONT LIST ────────────────────────
+// Filters fonts, updates info badges, builds page nav, shows page 1
+function renderFontList(category) {
+  if (category !== undefined) {
+    currentCategory = category;
+    currentSearch   = '';
+    const searchEl  = document.getElementById('font-search');
+    if (searchEl) searchEl.value = '';
+    hideSuggestions();
+  }
+
   const cats = currentCategory === 'all' ? CATEGORIES : [currentCategory];
-  let matchedFonts = [];
+  filteredFonts = [];
 
   cats.forEach(function(cat) {
     let fonts = allFonts.filter(function(f) { return f.category === cat; });
-
-    if (currentLetter) {
-      fonts = fonts.filter(function(f) {
-        return f.family.toUpperCase().startsWith(currentLetter);
-      });
-    }
 
     if (currentSearch) {
       const cleaned = cleanQuery(currentSearch);
@@ -211,79 +282,27 @@ function renderFontList(category) {
       });
     }
 
-    if (currentLetter || currentSearch) {
-      fonts.sort(function(a, b) { return a.family.localeCompare(b.family); });
-    }
-
-    matchedFonts = matchedFonts.concat(fonts);
+    fonts.sort(function(a, b) { return a.family.localeCompare(b.family); });
+    filteredFonts = filteredFonts.concat(fonts);
   });
 
   // Update info badges
-  const catEl      = document.getElementById('font-list-category');
-  const totalEl    = document.getElementById('font-list-total');
-  const showingEl  = document.getElementById('font-list-showing');
+  const catEl     = document.getElementById('font-list-category');
+  const totalEl   = document.getElementById('font-list-total');
+  const showingEl = document.getElementById('font-list-showing');
+
   if (catEl)     catEl.textContent     = 'Category: ' + (currentCategory === 'all' ? 'All' : currentCategory);
-  if (totalEl)   totalEl.textContent   = 'Total: ' + matchedFonts.length;
-  if (showingEl) showingEl.textContent = currentLetter
-    ? 'Showing: ' + currentLetter
-    : currentSearch
-      ? 'Showing: "' + currentSearch + '"'
-      : 'Showing: A–Z';
+  if (totalEl)   totalEl.textContent   = 'Total: ' + filteredFonts.length;
+  if (showingEl) showingEl.textContent = 'Showing: 1–' + Math.min(PAGE_SIZE, filteredFonts.length);
 
-  if (matchedFonts.length === 0) {
-    const none = document.createElement('span');
-    none.className   = 'font-list-name';
-    none.textContent = 'No fonts found.';
-    list.appendChild(none);
-    return;
-  }
-
-  // Render font names as inline tappable text with bullet dots
-  matchedFonts.forEach(function(font, i) {
-    if (i > 0) {
-      const dot = document.createElement('span');
-      dot.className   = 'font-list-dot';
-      dot.textContent = '·';
-      list.appendChild(dot);
-    }
-
-    const safeName = font.family.replace(/\s+/g, '_') + '_preview';
-    loadFontFace(safeName, font.menu);
-
-    const nameSpan = document.createElement('span');
-    nameSpan.className       = 'font-list-name';
-    nameSpan.textContent     = font.family;
-    nameSpan.style.fontFamily = '"' + safeName + '", serif';
-
-    nameSpan.addEventListener('click', function() {
-      // Mark active
-      document.querySelectorAll('.font-list-name').forEach(function(n) {
-        n.classList.remove('active');
-      });
-      nameSpan.classList.add('active');
-
-      // Set selected font and load first variant
-      selectedFont = font;
-      const firstVariant = Object.keys(font.files)[0];
-      const firstUrl     = font.files[firstVariant];
-      const firstSafe    = font.family.replace(/\s+/g, '_') + '_' + firstVariant;
-      loadFontFace(firstSafe, firstUrl);
-
-      // Update weight dropdown to match font's first variant
-      const weightEl = document.getElementById('font-weight-control');
-      if (weightEl) weightEl.value = getWeightNumber(firstVariant);
-
-      updateAllPreviews();
-    });
-
-    list.appendChild(nameSpan);
-  });
+  currentPage = 0;
+  renderPageNav();
+  renderFontPage();
 }
-// ── END PAGE SECTION 4 : RENDER FONT LIST ────────────────────
+// ── END PAGE SECTION 6 : RENDER FONT LIST ────────────────────
 
 
-// ── PAGE SECTION 5 : NAV BUTTON CLICKS ───────────────────────
-// Matches <div id="font-family-options"> in index.html
+// ── PAGE SECTION 7 : NAV BUTTON CLICKS ───────────────────────
 document.getElementById('font-family-options').addEventListener('click', function(e) {
   if (!e.target.matches('.gold-btn') && !e.target.matches('.gold-btn-active')) return;
   document.querySelectorAll('#font-family-options button').forEach(function(b) {
@@ -292,32 +311,31 @@ document.getElementById('font-family-options').addEventListener('click', functio
   e.target.className = 'gold-btn-active';
   renderFontList(e.target.dataset.cat);
 });
-// ── END PAGE SECTION 5 : NAV BUTTON CLICKS ───────────────────
+// ── END PAGE SECTION 7 : NAV BUTTON CLICKS ───────────────────
 
 
-// ── PAGE SECTION 6 : A–Z ROW CLICKS ──────────────────────────
-// Matches static <span class="az-btn"> elements in index.html
+// ── PAGE SECTION 8 : A–Z ROW CLICKS ──────────────────────────
 document.getElementById('az-row').addEventListener('click', function(e) {
   if (!e.target.matches('.az-btn')) return;
   const letter = e.target.dataset.letter;
-  if (currentLetter === letter) {
-    currentLetter = '';
+
+  if (currentSearch === letter) {
+    currentSearch = '';
     e.target.classList.remove('active');
   } else {
-    currentLetter = letter;
+    currentSearch = letter;
     document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
     e.target.classList.add('active');
   }
-  currentSearch = '';
+
   document.getElementById('font-search').value = '';
   hideSuggestions();
   renderFontList();
 });
-// ── END PAGE SECTION 6 : A–Z ROW CLICKS ──────────────────────
+// ── END PAGE SECTION 8 : A–Z ROW CLICKS ──────────────────────
 
 
-// ── PAGE SECTION 7 : SEARCH BAR LISTENERS ────────────────────
-// Matches <div class="search-bar-container"> in index.html
+// ── PAGE SECTION 9 : SEARCH BAR LISTENERS ────────────────────
 document.getElementById('font-search').addEventListener('input', function() {
   showSuggestions(this.value);
 });
@@ -325,7 +343,6 @@ document.getElementById('font-search').addEventListener('input', function() {
 document.getElementById('font-search').addEventListener('keyup', function(e) {
   if (e.key === 'Enter' || e.keyCode === 13) {
     currentSearch = cleanQuery(this.value.trim());
-    currentLetter = '';
     document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
     hideSuggestions();
     renderFontList();
@@ -338,17 +355,14 @@ document.getElementById('font-search').addEventListener('blur', function() {
 
 document.getElementById('search-btn').addEventListener('click', function() {
   currentSearch = cleanQuery(document.getElementById('font-search').value.trim());
-  currentLetter = '';
   document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
   hideSuggestions();
   renderFontList();
 });
-// ── END PAGE SECTION 7 : SEARCH BAR LISTENERS ────────────────
+// ── END PAGE SECTION 9 : SEARCH BAR LISTENERS ────────────────
 
 
-// ── PAGE SECTION 8 : CONTROLS — SIZE, WEIGHT, COLOR, ITALIC ──
-// Matches Step 3, 4, 5 controls in index.html
-
+// ── PAGE SECTION 10 : CONTROLS — SIZE, WEIGHT, COLOR, ITALIC ─
 document.getElementById('font-size-control').addEventListener('change', function() {
   updateAllPreviews();
 });
@@ -366,29 +380,25 @@ document.getElementById('italic-toggle').addEventListener('click', function() {
   updateAllPreviews();
 });
 
-// Variant buttons (Step 4 static HTML buttons with data-weight)
 document.getElementById('variants').addEventListener('click', function(e) {
-  if (!e.target.matches('.gold-btn')) return;
-  document.querySelectorAll('#variants .gold-btn').forEach(function(b) {
-    b.className = 'gold-btn';
-  });
+  if (!e.target.matches('.gold-btn') && !e.target.matches('.gold-btn-active')) return;
+  document.querySelectorAll('#variants button').forEach(function(b) { b.className = 'gold-btn'; });
   e.target.className = 'gold-btn-active';
   const weightEl = document.getElementById('font-weight-control');
   if (weightEl) weightEl.value = e.target.dataset.weight;
   updateAllPreviews();
 });
-// ── END PAGE SECTION 8 : CONTROLS ────────────────────────────
+// ── END PAGE SECTION 10 : CONTROLS ───────────────────────────
 
 
-// ── PAGE SECTION 9 : FONT PREVIEW TEXT INPUT ─────────────────
-// Matches <input id="font-preview-text"> in index.html
+// ── PAGE SECTION 11 : FONT PREVIEW TEXT INPUT ─────────────────
 document.getElementById('font-preview-text').addEventListener('input', function() {
   updateAllPreviews();
 });
-// ── END PAGE SECTION 9 : FONT PREVIEW TEXT INPUT ─────────────
+// ── END PAGE SECTION 11 : FONT PREVIEW TEXT INPUT ────────────
 
 
-// ── PAGE SECTION 10 : LOAD FONTS FROM API ────────────────────
+// ── PAGE SECTION 12 : LOAD FONTS FROM API ────────────────────
 async function loadFonts() {
   try {
     const url  = 'https://www.googleapis.com/webfonts/v1/webfonts?key=' + API_KEY + '&sort=popularity';
@@ -396,13 +406,12 @@ async function loadFonts() {
     if (!res.ok) throw new Error('API error ' + res.status);
     const data = await res.json();
     allFonts   = data.items;
-    renderFontList('all');
+    renderFontList('serif');
   } catch (err) {
     const list = document.getElementById('font-list');
     if (list) {
       list.innerHTML = '';
-      const errMsg = document.createElement('span');
-      errMsg.className   = 'font-list-name';
+      const errMsg = document.createElement('p');
       errMsg.textContent = 'Could not load fonts. Check your API key.';
       list.appendChild(errMsg);
     }
@@ -411,4 +420,4 @@ async function loadFonts() {
 }
 
 loadFonts();
-// ── END PAGE SECTION 10 : LOAD FONTS FROM API ────────────────
+// ── END PAGE SECTION 12 : LOAD FONTS FROM API ────────────────
