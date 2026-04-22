@@ -1,5 +1,5 @@
 /* ================================================================
-   GOOGLE FONTS BROWSER — Stylesheet (CLEANED)
+   GOOGLE FONTS BROWSER — Stylesheet
    ================================================================ */
 
 /* ── Variable definitions ── */
@@ -76,10 +76,6 @@ hr {
   margin: 12px auto;
   border: none;
   border-top: 1px solid var(--gold-border);
-}
-
-ol {
-  margin-left: 20px;
 }
 
 /* ================================================================
@@ -167,7 +163,7 @@ ol {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 36px;
+  min-height: 36px;
   border: 2px solid var(--gold);
   border-radius: 10px;
   background: var(--blue-glow);
@@ -270,7 +266,94 @@ code {
 }
 
 /* ================================================================
-   SEARCH + AZ
+   VARIANT BUTTONS ROW
+   ================================================================ */
+
+.variant-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.variant-btn {
+  border: 1px solid var(--gold-border);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--gold);
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.variant-btn.active {
+  background: var(--gold);
+  color: #0a0904;
+  font-weight: bold;
+}
+
+/* ================================================================
+   TOOLBAR
+   ================================================================ */
+
+.font-preview-tools {
+  margin: 8px 0;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--gold-border);
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.font-preview-tools input[type="range"] {
+  width: 100%;
+  accent-color: var(--gold);
+}
+
+.font-preview-tools button {
+  padding: 6px 14px;
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--gold);
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.font-preview-tools input[type="color"] {
+  height: 36px;
+  width: 44px;
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  padding: 2px;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* ================================================================
+   FONT PREVIEW TEXT
+   ================================================================ */
+
+.font-preview-text {
+  min-height: 50px;
+  padding: 14px 10px;
+  margin: 8px 0;
+  border: 1px dashed var(--gold-border);
+  border-radius: 10px;
+  font-size: 20px;
+  color: #ffffff;
+  word-break: break-word;
+  background: rgba(0,0,0,0.3);
+}
+
+/* ================================================================
+   SEARCH + AZ ROW
    ================================================================ */
 
 #search-wrap {
@@ -281,13 +364,18 @@ code {
 }
 
 #font-search {
-  width: 100%;
+  flex: 1;
   padding: 10px 14px;
   font-size: 1rem;
   border: 2px solid var(--gold);
   border-radius: 8px;
   background: #0d1b2a;
   color: #fff;
+  outline: none;
+}
+
+#font-search::placeholder {
+  color: var(--text-muted);
 }
 
 #search-btn {
@@ -298,13 +386,19 @@ code {
   background: #0d1b2a;
   color: var(--gold);
   cursor: pointer;
+  flex-shrink: 0;
+}
+
+#search-btn:active {
+  background: var(--gold);
+  color: #0a0904;
 }
 
 #az-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 2px;
+  gap: 1px;
   margin-bottom: 12px;
 }
 
@@ -312,8 +406,9 @@ code {
   font-size: 0.72rem;
   color: var(--gold);
   cursor: pointer;
-  padding: 2px 3px;
+  padding: 3px 4px;
   border-radius: 4px;
+  user-select: none;
 }
 
 .az-btn.active {
@@ -332,11 +427,13 @@ code {
    ================================================================ */
 
 #search-dropdown {
+  position: relative;
+  z-index: 100;
   background: #0d1b2a;
   border: 1px solid var(--gold);
   border-radius: 8px;
   display: none;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .dropdown-item {
@@ -344,53 +441,13 @@ code {
   color: #fff;
   cursor: pointer;
   border-bottom: 1px solid #1e3a5f;
+  font-size: 14px;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
 }
 
 .dropdown-item:active {
   background: #1e3a5f;
-}
-
-/* ================================================================
-   FONT PREVIEW TOOLING (ACTIVE SYSTEM)
-   ================================================================ */
-
-.font-preview-tools {
-  margin-top: 15px;
-  padding: 12px;
-  border-radius: 10px;
-  background: #111;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.font-preview-tools input[type="text"] {
-  padding: 8px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: none;
-}
-
-.font-preview-tools input[type="range"] {
-  width: 100%;
-}
-
-.font-preview-tools button {
-  padding: 6px 10px;
-  border: none;
-  border-radius: 6px;
-  background: #c8a96e;
-  color: black;
-  font-weight: bold;
-}
-
-.font-preview-tools input[type="color"] {
-  height: 40px;
-  border: none;
-  padding: 0;
-}
-
-.font-preview-text {
-  min-height: 50px;
-  word-break: break-word;
 }

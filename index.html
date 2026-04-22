@@ -8,7 +8,6 @@
   <meta name="theme-color" content="#c8a96e">
   <link rel="stylesheet" href="google_fonts.css">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Space+Mono&family=Lato:wght@400;700&family=Bree+Serif&display=swap" rel="stylesheet">
-  
 </head>
 <body>
 
@@ -20,7 +19,7 @@
 
   <!-- NAV ROW -->
   <div class="nav-row" id="font-family-options">
-    <button class="nav-btn" data-cat="all">All</button>
+    <button class="nav-btn active" data-cat="all">All</button>
     <button class="nav-btn" data-cat="serif">Serif</button>
     <button class="nav-btn" data-cat="sans-serif">Sans-Serif</button>
     <button class="nav-btn" data-cat="monospace">Monospace</button>
@@ -29,14 +28,16 @@
   </div><!-- ENDS NAV-ROW -->
 
   <hr>
-  
-<div id="search-wrap">
-  <input type="text" id="font-search" placeholder="Search all fonts..." autocomplete="off" />
-  <button id="search-btn">🔍</button>
-</div>
-<div id="search-dropdown"></div>
 
-<div id="az-row"></div>
+  <!-- SEARCH BAR -->
+  <div id="search-wrap">
+    <input type="text" id="font-search" placeholder="Search all fonts..." autocomplete="off" />
+    <button id="search-btn">🔍</button>
+  </div>
+  <div id="search-dropdown"></div>
+
+  <!-- A–Z ROW -->
+  <div id="az-row"></div>
 
 </div><!-- ENDS SECTION 1 -->
 
@@ -60,8 +61,7 @@
   <!-- CODEBOX 2 -->
   <h4>Codebox #2 : CSS Rules</h4>
   <p>Use the toolbar to change the font styles. The changes will be reflected on the font preview.</p>
-  
-  <p>The font family name and its attributes are created in the output codebox below. Copy and paste the style attributes and paste them into your stylesheet.</p>
+  <p>The font family name and its attributes are created in the output codebox below. Copy and paste the style attributes into your stylesheet.</p>
 
   <div class="gold-block">
     <code id="static-code-2"></code>
