@@ -102,7 +102,6 @@ function showSuggestions(query) {
       hideSuggestions();
       renderFonts();
     });
-    // Touch support for mobile
     item.addEventListener('touchstart', function(e) {
       e.preventDefault();
       document.getElementById('font-search').value = font.family;
@@ -222,12 +221,13 @@ function toggleVariants(card, font) {
   preview.className = 'font-preview-text';
   preview.textContent = font.family;
 
-  // ── Toolbar ──
+  // ── Step 2 heading ──
   const toolHeading = document.createElement('div');
   toolHeading.className = 'blue-block';
   toolHeading.style.marginTop = '12px';
   toolHeading.textContent = '◆ Step 2 : Adjust style ◆';
 
+  // ── Toolbar ──
   const toolbar = document.createElement('div');
   toolbar.className = 'font-preview-tools';
 
@@ -260,7 +260,7 @@ function toggleVariants(card, font) {
 
   const colorLabel = document.createElement('span');
   colorLabel.textContent = 'Color :';
-  colorLabel.style.color = 'var(--gold)';
+  colorLabel.style.color    = 'var(--gold)';
   colorLabel.style.fontSize = '13px';
 
   const colorPicker = document.createElement('input');
@@ -273,35 +273,41 @@ function toggleVariants(card, font) {
 
   // ── Update preview and code boxes ──
   function updateAll() {
-    preview.style.fontSize   = state.size   + 'px';
-    preview.style.fontWeight = state.weight;
-    preview.style.fontStyle  = state.italic ? 'italic' : 'normal';
-    preview.style.color      = state.color;
-    sizeLabel.textContent    = 'Size : ' + state.size + 'px';
-    boldBtn.style.background = state.weight === 700 ? 'var(--gold)' : '';
-    boldBtn.style.color      = state.weight === 700 ? '#0a0904'     : '';
+    preview.style.fontSize     = state.size   + 'px';
+    preview.style.fontWeight   = state.weight;
+    preview.style.fontStyle    = state.italic ? 'italic' : 'normal';
+    preview.style.color        = state.color;
+    sizeLabel.textContent      = 'Size : ' + state.size + 'px';
+    boldBtn.style.background   = state.weight === 700 ? 'var(--gold)' : '';
+    boldBtn.style.color        = state.weight === 700 ? '#0a0904'     : '';
     italicBtn.style.background = state.italic ? 'var(--gold)' : '';
     italicBtn.style.color      = state.italic ? '#0a0904'     : '';
     syncCodeBoxes(font, state.variant, state);
   }
 
-  // ── Toolbar events ──
-  sizeSlider.addEventListener('input', function() {
+  // ── Toolbar events — stopPropagation prevents card from collapsing ──
+  sizeSlider.addEventListener('click',  function(e) { e.stopPropagation(); });
+  sizeSlider.addEventListener('input',  function(e) {
+    e.stopPropagation();
     state.size = parseInt(this.value);
     updateAll();
   });
 
-  boldBtn.addEventListener('click', function() {
+  boldBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
     state.weight = (state.weight === 700) ? 400 : 700;
     updateAll();
   });
 
-  italicBtn.addEventListener('click', function() {
+  italicBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
     state.italic = !state.italic;
     updateAll();
   });
 
-  colorPicker.addEventListener('input', function() {
+  colorPicker.addEventListener('click', function(e) { e.stopPropagation(); });
+  colorPicker.addEventListener('input', function(e) {
+    e.stopPropagation();
     state.color = this.value;
     updateAll();
   });
@@ -319,13 +325,10 @@ function toggleVariants(card, font) {
 
     btn.addEventListener('click', function(e) {
       e.stopPropagation();
-      // Highlight selected variant button
       variantWrap.querySelectorAll('.variant-btn').forEach(function(b) {
         b.classList.remove('active');
       });
       btn.classList.add('active');
-
-      // Apply font to preview
       preview.style.fontFamily = '"' + safeName + '", serif';
       state.variant = variant;
       state.weight  = parseInt(getWeightNumber(variant));
@@ -345,8 +348,8 @@ function toggleVariants(card, font) {
   state.variant = firstVariant;
   state.weight  = parseInt(getWeightNumber(firstVariant));
   state.italic  = firstVariant.includes('italic');
-  variantWrap.querySelector('.variant-btn') &&
-    variantWrap.querySelector('.variant-btn').classList.add('active');
+  const firstBtn = variantWrap.querySelector('.variant-btn');
+  if (firstBtn) firstBtn.classList.add('active');
 
   panel.appendChild(variantWrap);
   panel.appendChild(toolHeading);
@@ -398,7 +401,6 @@ function renderFonts(category) {
 
     if (fonts.length === 0) return;
 
-    // Category heading
     const catCard = document.createElement('div');
     catCard.className = 'card';
     const catTitle = document.createElement('div');
@@ -407,7 +409,6 @@ function renderFonts(category) {
     catCard.appendChild(catTitle);
     container.appendChild(catCard);
 
-    // Font cards
     fonts.forEach(function(font) {
       const card = document.createElement('div');
       card.className = 'card';
