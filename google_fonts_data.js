@@ -1,16 +1,20 @@
-// *** API KEY ***
+// ── API KEY ──────────────────────────────────────────────────
 const API_KEY = 'AIzaSyC941rSK-K3iehOd2osiSv7PPQV6MYl0Ac';
+// ── END API KEY ──────────────────────────────────────────────
 
-// ── Core State ──
+
+// ── CORE STATE ───────────────────────────────────────────────
 const CATEGORIES = ['serif', 'sans-serif', 'monospace', 'display', 'handwriting'];
 let allFonts        = [];
 let currentCategory = 'all';
 let currentLetter   = '';
 let currentSearch   = '';
+let selectedFont    = null;   // the font object the user tapped
+// ── END CORE STATE ───────────────────────────────────────────
 
-// ─────────────────────────────────────────────
-// Strip style words so "Lora Italic" finds "Lora"
-// ─────────────────────────────────────────────
+
+// ── UTILITY : CLEAN SEARCH QUERY ─────────────────────────────
+// Strips style words so "Lora Italic" finds "Lora"
 const STYLE_WORDS = ['italic','bold','light','thin','regular','medium',
                      'black','extra','semi','condensed','oblique','variable'];
 
@@ -21,19 +25,20 @@ function cleanQuery(raw) {
     .join(' ')
     .trim();
 }
+// ── END UTILITY : CLEAN SEARCH QUERY ─────────────────────────
 
-// ─────────────────────────────────────────────
-// Load a font face into the browser
-// ─────────────────────────────────────────────
+
+// ── UTILITY : LOAD FONT FACE ──────────────────────────────────
 function loadFontFace(name, url) {
   const style = document.createElement('style');
   style.textContent = '@font-face { font-family: "' + name + '"; src: url("' + url + '"); }';
   document.head.appendChild(style);
 }
+// ── END UTILITY : LOAD FONT FACE ─────────────────────────────
 
-// ─────────────────────────────────────────────
-// Copy static code boxes (bottom of page)
-// ─────────────────────────────────────────────
+
+// ── UTILITY : COPY STATIC CODE BOX ───────────────────────────
+// Called by onclick on copy buttons in HTML
 function copyStatic(codeId, btnId) {
   const code = document.getElementById(codeId).textContent.trim();
   const btn  = document.getElementById(btnId);
@@ -46,29 +51,85 @@ function copyStatic(codeId, btnId) {
     setTimeout(function() { btn.textContent = '📋 Copy'; }, 2000);
   });
 }
+// ── END UTILITY : COPY STATIC CODE BOX ───────────────────────
 
-// ─────────────────────────────────────────────
-// Weight label helpers
-// ─────────────────────────────────────────────
-function getWeightLabel(variant) {
-  const map = {
-    '100': 'Thin', '200': 'Extra Light', '300': 'Light',
-    'regular': 'Regular (400)', '400': 'Regular', '500': 'Medium',
-    '600': 'Semi Bold', '700': 'Bold', '800': 'Extra Bold', '900': 'Black'
-  };
-  const base     = variant.replace('italic', '').trim() || 'regular';
-  const isItalic = variant.includes('italic');
-  return (map[base] || base) + (isItalic ? ' Italic' : '');
-}
 
+// ── UTILITY : WEIGHT NUMBER HELPER ───────────────────────────
 function getWeightNumber(variant) {
   if (variant === 'regular' || variant === 'italic') return '400';
   return variant.replace('italic', '').trim();
 }
+// ── END UTILITY : WEIGHT NUMBER HELPER ───────────────────────
 
-// ─────────────────────────────────────────────
-// Dropdown suggestions
-// ─────────────────────────────────────────────
+
+// ── PAGE SECTION 1 : UPDATE ALL PREVIEW BOXES ────────────────
+// Updates font-family-preview, font-size-preview,
+// font-weight-preview, font-color-preview
+// with current font + control values
+function updateAllPreviews() {
+  const previewText = document.getElementById('font-preview-text').value.trim()
+    || (selectedFont ? selectedFont.family : 'Preview');
+
+  const size    = document.getElementById('font-size-control').value + 'px';
+  const weight  = document.getElementById('font-weight-control').value;
+  const color   = document.getElementById('color-picker').value;
+  const isItalic = document.getElementById('italic-toggle').classList.contains('active');
+  const fontFamily = selectedFont
+    ? '"' + selectedFont.family + '", serif'
+    : 'inherit';
+
+  const previews = [
+    document.getElementById('font-family-preview'),
+    document.getElementById('font-size-preview'),
+    document.getElementById('font-weight-preview'),
+    document.getElementById('font-color-preview')
+  ];
+
+  previews.forEach(function(el) {
+    if (!el) return;
+    el.textContent       = previewText;
+    el.style.fontFamily  = fontFamily;
+    el.style.fontSize    = size;
+    el.style.fontWeight  = weight;
+    el.style.fontStyle   = isItalic ? 'italic' : 'normal';
+    el.style.color       = color;
+  });
+
+  syncCodeBoxes();
+}
+// ── END PAGE SECTION 1 : UPDATE ALL PREVIEW BOXES ────────────
+
+
+// ── PAGE SECTION 2 : SYNC CODE BOXES ─────────────────────────
+// Updates static-code-1 (link tag) and static-code-2 (CSS rules)
+function syncCodeBoxes() {
+  if (!selectedFont) return;
+
+  const weight   = document.getElementById('font-weight-control').value;
+  const size     = document.getElementById('font-size-control').value;
+  const color    = document.getElementById('color-picker').value;
+  const isItalic = document.getElementById('italic-toggle').classList.contains('active');
+
+  const linkCode = '<link href="https://fonts.googleapis.com/css2?family=' +
+    selectedFont.family.replace(/\s+/g, '+') +
+    ':wght@' + weight + '&display=swap" rel="stylesheet">';
+
+  const cssCode = "font-family: '" + selectedFont.family + "', " + selectedFont.category + ';\n' +
+                  'font-size: '    + size   + 'px;\n' +
+                  'font-weight: '  + weight + ';\n' +
+                  'font-style: '   + (isItalic ? 'italic' : 'normal') + ';\n' +
+                  'color: '        + color  + ';';
+
+  const c1 = document.getElementById('static-code-1');
+  const c2 = document.getElementById('static-code-2');
+  if (c1) c1.textContent = linkCode;
+  if (c2) c2.textContent = cssCode;
+}
+// ── END PAGE SECTION 2 : SYNC CODE BOXES ─────────────────────
+
+
+// ── PAGE SECTION 3 : SEARCH DROPDOWN ─────────────────────────
+// Matches <div id="search-dropdown"> in index.html
 function showSuggestions(query) {
   const dropdown = document.getElementById('search-dropdown');
   if (!dropdown) return;
@@ -86,22 +147,20 @@ function showSuggestions(query) {
     const item = document.createElement('div');
     item.className = 'dropdown-item';
     item.textContent = font.family;
-    item.addEventListener('mousedown', function() {
+
+    function selectFromDropdown() {
       document.getElementById('font-search').value = font.family;
       currentSearch = font.family;
       currentLetter = '';
       document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
       hideSuggestions();
-      renderFonts();
-    });
+      renderFontList();
+    }
+
+    item.addEventListener('mousedown', selectFromDropdown);
     item.addEventListener('touchstart', function(e) {
       e.preventDefault();
-      document.getElementById('font-search').value = font.family;
-      currentSearch = font.family;
-      currentLetter = '';
-      document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
-      hideSuggestions();
-      renderFonts();
+      selectFromDropdown();
     });
     dropdown.appendChild(item);
   });
@@ -112,313 +171,13 @@ function hideSuggestions() {
   const dropdown = document.getElementById('search-dropdown');
   if (dropdown) dropdown.style.display = 'none';
 }
+// ── END PAGE SECTION 3 : SEARCH DROPDOWN ─────────────────────
 
-// ─────────────────────────────────────────────
-// Build A–Z letter row
-// ─────────────────────────────────────────────
-function buildAZRow() {
-  const row = document.getElementById('az-row');
-  if (!row) return;
-  row.innerHTML = '';
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(function(letter, i) {
-    if (i > 0) {
-      const dot = document.createElement('span');
-      dot.className = 'az-dot';
-      dot.textContent = '·';
-      row.appendChild(dot);
-    }
-    const btn = document.createElement('span');
-    btn.className = 'az-btn';
-    btn.textContent = letter;
-    btn.addEventListener('click', function() {
-      if (currentLetter === letter) {
-        currentLetter = '';
-        btn.classList.remove('active');
-      } else {
-        currentLetter = letter;
-        document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-      }
-      currentSearch = '';
-      document.getElementById('font-search').value = '';
-      hideSuggestions();
-      renderFonts();
-    });
-    row.appendChild(btn);
-  });
-}
 
-// ─────────────────────────────────────────────
-// Build a labeled gold code block with copy button
-// ─────────────────────────────────────────────
-function makeGoldBlock(h4Text, paragraphs) {
-  const wrap = document.createElement('div');
-  wrap.style.marginTop = '12px';
-
-  // h4 heading
-  const h4 = document.createElement('h4');
-  h4.textContent = h4Text;
-  wrap.appendChild(h4);
-
-  // paragraphs
-  paragraphs.forEach(function(txt) {
-    const p = document.createElement('p');
-    p.textContent = txt;
-    wrap.appendChild(p);
-  });
-
-  // gold block with code + copy button
-  const block = document.createElement('div');
-  block.className = 'gold-block';
-
-  const codeEl = document.createElement('code');
-  codeEl.textContent = '';
-
-  const copyBtn = document.createElement('button');
-  copyBtn.className   = 'gold-btn';
-  copyBtn.textContent = '📋 Copy';
-  copyBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    const text = codeEl.textContent.trim();
-    if (!text) return;
-    navigator.clipboard.writeText(text).then(function() {
-      copyBtn.textContent = '✓ Copied';
-      setTimeout(function() { copyBtn.textContent = '📋 Copy'; }, 2000);
-    });
-  });
-
-  block.appendChild(codeEl);
-  block.appendChild(copyBtn);
-  wrap.appendChild(block);
-
-  return { wrap, codeEl };
-}
-
-// ─────────────────────────────────────────────
-// Font card expander with toolbar + inline code boxes
-// ─────────────────────────────────────────────
-function toggleVariants(card, font) {
-  const existing = card.querySelector('.font-expanded');
-  if (existing) {
-    existing.remove();
-    return;
-  }
-
-  const panel = document.createElement('div');
-  panel.className = 'font-expanded';
-
-  // ── Per-card state ──
-  const state = {
-    size:    20,
-    weight:  400,
-    italic:  false,
-    color:   '#ffffff',
-    variant: 'regular'
-  };
-
-  // ── Step 1 heading ──
-  const heading = document.createElement('div');
-  heading.className = '';
-  heading.textContent = '◆ Step 1 : Select Font ◆';
-  panel.appendChild(heading);
-
-  const tip = document.createElement('p');
-  tip.className = '';
-  tip.textContent = font.family + ' has ' + font.variants.length + ' style' +
-    (font.variants.length > 1 ? 's' : '') + '. Tap one to preview.';
-  panel.appendChild(tip);
-
-  // ── Variant buttons ──
-  const variantWrap = document.createElement('div');
-  variantWrap.className = 'variant-row';
-
-  // ── Step 2 heading ──
-  const toolHeading = document.createElement('div');
-  toolHeading.className = '';
-  toolHeading.style.marginTop = '12px';
-  toolHeading.textContent = '◆ Step 2 : Change Styles ◆';
-
-  // ── Toolbar ──
-  const toolbar = document.createElement('div');
-  toolbar.className = 'font-preview-tools';
-
-  const sizeLabel = document.createElement('p');
-  sizeLabel.textContent    = 'Size : ' + state.size + 'px';
-  sizeLabel.style.marginBottom = '2px';
-
-  const sizeSlider = document.createElement('input');
-  sizeSlider.type  = 'range';
-  sizeSlider.min   = 10;
-  sizeSlider.max   = 72;
-  sizeSlider.value = state.size;
-
-  const styleRow = document.createElement('div');
-  styleRow.style.display    = 'flex';
-  styleRow.style.gap        = '8px';
-  styleRow.style.alignItems = 'center';
-  styleRow.style.flexWrap   = 'wrap';
-
-  const boldBtn = document.createElement('button');
-  boldBtn.textContent = 'B';
-  boldBtn.title = 'Toggle Bold';
-
-  const italicBtn = document.createElement('button');
-  italicBtn.textContent   = 'I';
-  italicBtn.style.fontStyle = 'italic';
-  italicBtn.title = 'Toggle Italic';
-
-  const colorLabel = document.createElement('span');
-  colorLabel.textContent  = 'Color :';
-  colorLabel.style.color  = 'var(--gold)';
-  colorLabel.style.fontSize = '13px';
-
-  const colorPicker = document.createElement('input');
-  colorPicker.type  = 'color';
-  colorPicker.value = state.color;
-
-  styleRow.append(boldBtn, italicBtn, colorLabel, colorPicker);
-  toolbar.append(sizeLabel, sizeSlider, styleRow);
-
-  // ── Preview ──
-  const preview = document.createElement('div');
-  preview.className   = 'font-preview-text';
-  preview.textContent = font.family;
-
-  // ── Inline code boxes with labels and descriptions ──
-  const box1 = makeGoldBlock(
-    'Step 1 : Link to google fonts',
-    ['Each font has to be retrieved from the Google cloud server. Once you choose a font the codebox will provide you with link code. Copy the link from the codebox and paste it to the head section of your HTML.']
-  );
-
-  const box2 = makeGoldBlock(
-    'Step 2 : CSS Rules',
-    [
-      'Use the toolbar to change the font styles. The changes will be reflected on the font preview and added to codebox 2.',
-      'The font family name and its attributes are created in the output codebox below. Copy and paste the style attributes into your stylesheet.'
-    ]
-  );
-
-  // ── Sync everything ──
-  function syncAll() {
-    const weightNum = getWeightNumber(state.variant);
-    const isItalic  = state.italic;
-
-    const linkCode = '<link href="https://fonts.googleapis.com/css2?family=' +
-      font.family.replace(/\s+/g, '+') +
-      ':wght@' + weightNum + '&display=swap" rel="stylesheet">';
-
-    const cssCode = "font-family: '" + font.family + "', " + font.category + ';\n' +
-                    'font-size: '    + state.size   + 'px;\n' +
-                    'font-weight: '  + state.weight + ';\n' +
-                    'font-style: '   + (isItalic ? 'italic' : 'normal') + ';\n' +
-                    'color: '        + state.color  + ';';
-
-    box1.codeEl.textContent = linkCode;
-    box2.codeEl.textContent = cssCode;
-
-    const c1 = document.getElementById('static-code-1');
-    const c2 = document.getElementById('static-code-2');
-    if (c1) c1.textContent = linkCode;
-    if (c2) c2.textContent = cssCode;
-  }
-
-  function updateAll() {
-    preview.style.fontSize     = state.size   + 'px';
-    preview.style.fontWeight   = state.weight;
-    preview.style.fontStyle    = state.italic ? 'italic' : 'normal';
-    preview.style.color        = state.color;
-    sizeLabel.textContent      = 'Size : ' + state.size + 'px';
-    boldBtn.style.background   = state.weight === 700 ? 'var(--gold)' : '';
-    boldBtn.style.color        = state.weight === 700 ? '#0a0904'     : '';
-    italicBtn.style.background = state.italic ? 'var(--gold)' : '';
-    italicBtn.style.color      = state.italic ? '#0a0904'     : '';
-    syncAll();
-  }
-
-  // ── Toolbar events ──
-  sizeSlider.addEventListener('click', function(e) { e.stopPropagation(); });
-  sizeSlider.addEventListener('input', function(e) {
-    e.stopPropagation();
-    state.size = parseInt(this.value);
-    updateAll();
-  });
-
-  boldBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    state.weight = (state.weight === 700) ? 400 : 700;
-    updateAll();
-  });
-
-  italicBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    state.italic = !state.italic;
-    updateAll();
-  });
-
-  colorPicker.addEventListener('click', function(e) { e.stopPropagation(); });
-  colorPicker.addEventListener('input', function(e) {
-    e.stopPropagation();
-    state.color = this.value;
-    updateAll();
-  });
-
-  // ── Variant buttons ──
-  Object.entries(font.files).forEach(function(entry) {
-    const variant  = entry[0];
-    const fileUrl  = entry[1];
-    const safeName = font.family.replace(/\s+/g, '_') + '_' + variant;
-    loadFontFace(safeName, fileUrl);
-
-    const btn = document.createElement('button');
-    btn.className   = 'variant-btn';
-    btn.textContent = getWeightLabel(variant);
-
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      variantWrap.querySelectorAll('.variant-btn').forEach(function(b) {
-        b.classList.remove('active');
-      });
-      btn.classList.add('active');
-      preview.style.fontFamily = '"' + safeName + '", serif';
-      state.variant = variant;
-      state.weight  = parseInt(getWeightNumber(variant));
-      state.italic  = variant.includes('italic');
-      updateAll();
-    });
-
-    variantWrap.appendChild(btn);
-  });
-
-  // Load first variant automatically
-  const firstVariant = Object.keys(font.files)[0];
-  const firstUrl     = font.files[firstVariant];
-  const firstSafe    = font.family.replace(/\s+/g, '_') + '_' + firstVariant;
-  loadFontFace(firstSafe, firstUrl);
-  preview.style.fontFamily = '"' + firstSafe + '", serif';
-  state.variant = firstVariant;
-  state.weight  = parseInt(getWeightNumber(firstVariant));
-  state.italic  = firstVariant.includes('italic');
-  const firstBtn = variantWrap.querySelector('.variant-btn');
-  if (firstBtn) firstBtn.classList.add('active');
-
-  // ── Assemble panel ──
-  
-  panel.appendChild(toolHeading);
-  panel.appendChild(box1.wrap);
-  panel.appendChild(variantWrap);
-  panel.appendChild(toolbar);
-  panel.appendChild(preview);
-  
-  panel.appendChild(box2.wrap);
-
-  card.appendChild(panel);
-  updateAll();
-}
-
-// ─────────────────────────────────────────────
-// Render font list with all filters applied
-// ─────────────────────────────────────────────
-function renderFonts(category) {
+// ── PAGE SECTION 4 : RENDER FONT LIST ────────────────────────
+// Populates font-list with compact inline font names + bullets
+// Updates info badges: font-list-category, total, showing
+function renderFontList(category) {
   if (category !== undefined) {
     currentCategory = category;
     currentLetter   = '';
@@ -429,10 +188,12 @@ function renderFonts(category) {
     hideSuggestions();
   }
 
-  const container = document.getElementById('font-container');
-  container.innerHTML = '';
+  const list = document.getElementById('font-list');
+  if (!list) return;
+  list.innerHTML = '';
 
   const cats = currentCategory === 'all' ? CATEGORIES : [currentCategory];
+  let matchedFonts = [];
 
   cats.forEach(function(cat) {
     let fonts = allFonts.filter(function(f) { return f.category === cat; });
@@ -454,56 +215,109 @@ function renderFonts(category) {
       fonts.sort(function(a, b) { return a.family.localeCompare(b.family); });
     }
 
-    if (fonts.length === 0) return;
+    matchedFonts = matchedFonts.concat(fonts);
+  });
 
-    const catCard = document.createElement('div');
-    catCard.className = 'card';
-    const catTitle = document.createElement('div');
-    catTitle.className = 'blue-block';
-    catTitle.textContent = '◆ ' + cat.replace('-', ' ').toUpperCase() + ' (' + fonts.length + ') ◆';
-    catCard.appendChild(catTitle);
-    container.appendChild(catCard);
+  // Update info badges
+  const catEl      = document.getElementById('font-list-category');
+  const totalEl    = document.getElementById('font-list-total');
+  const showingEl  = document.getElementById('font-list-showing');
+  if (catEl)     catEl.textContent     = 'Category: ' + (currentCategory === 'all' ? 'All' : currentCategory);
+  if (totalEl)   totalEl.textContent   = 'Total: ' + matchedFonts.length;
+  if (showingEl) showingEl.textContent = currentLetter
+    ? 'Showing: ' + currentLetter
+    : currentSearch
+      ? 'Showing: "' + currentSearch + '"'
+      : 'Showing: A–Z';
 
-    fonts.forEach(function(font) {
-      const card = document.createElement('div');
-      card.className = 'card';
+  if (matchedFonts.length === 0) {
+    const none = document.createElement('span');
+    none.className   = 'font-list-name';
+    none.textContent = 'No fonts found.';
+    list.appendChild(none);
+    return;
+  }
 
-      const safeName = font.family.replace(/\s+/g, '_') + '_preview';
-      loadFontFace(safeName, font.menu);
+  // Render font names as inline tappable text with bullet dots
+  matchedFonts.forEach(function(font, i) {
+    if (i > 0) {
+      const dot = document.createElement('span');
+      dot.className   = 'font-list-dot';
+      dot.textContent = '·';
+      list.appendChild(dot);
+    }
 
-      const nameEl = document.createElement('h4');
-      nameEl.style.fontFamily = '"' + safeName + '", serif';
-      nameEl.textContent = font.family;
+    const safeName = font.family.replace(/\s+/g, '_') + '_preview';
+    loadFontFace(safeName, font.menu);
 
-      const meta = document.createElement('p');
-      meta.textContent = font.variants.length + ' style' +
-        (font.variants.length > 1 ? 's' : '') + ' — tap to expand';
+    const nameSpan = document.createElement('span');
+    nameSpan.className       = 'font-list-name';
+    nameSpan.textContent     = font.family;
+    nameSpan.style.fontFamily = '"' + safeName + '", serif';
 
-      card.appendChild(nameEl);
-      card.appendChild(meta);
-
-      card.addEventListener('click', function() {
-        toggleVariants(card, font);
+    nameSpan.addEventListener('click', function() {
+      // Mark active
+      document.querySelectorAll('.font-list-name').forEach(function(n) {
+        n.classList.remove('active');
       });
+      nameSpan.classList.add('active');
 
-      container.appendChild(card);
+      // Set selected font and load first variant
+      selectedFont = font;
+      const firstVariant = Object.keys(font.files)[0];
+      const firstUrl     = font.files[firstVariant];
+      const firstSafe    = font.family.replace(/\s+/g, '_') + '_' + firstVariant;
+      loadFontFace(firstSafe, firstUrl);
+
+      // Update weight dropdown to match font's first variant
+      const weightEl = document.getElementById('font-weight-control');
+      if (weightEl) weightEl.value = getWeightNumber(firstVariant);
+
+      updateAllPreviews();
     });
+
+    list.appendChild(nameSpan);
   });
 }
+// ── END PAGE SECTION 4 : RENDER FONT LIST ────────────────────
 
-// ─────────────────────────────────────────────
-// Nav button clicks
-// ─────────────────────────────────────────────
+
+// ── PAGE SECTION 5 : NAV BUTTON CLICKS ───────────────────────
+// Matches <div id="font-family-options"> in index.html
 document.getElementById('font-family-options').addEventListener('click', function(e) {
-  if (!e.target.matches('.nav-btn')) return;
-  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
-  e.target.classList.add('active');
-  renderFonts(e.target.dataset.cat);
+  if (!e.target.matches('.gold-btn') && !e.target.matches('.gold-btn-active')) return;
+  document.querySelectorAll('#font-family-options button').forEach(function(b) {
+    b.className = 'gold-btn';
+  });
+  e.target.className = 'gold-btn-active';
+  renderFontList(e.target.dataset.cat);
 });
+// ── END PAGE SECTION 5 : NAV BUTTON CLICKS ───────────────────
 
-// ─────────────────────────────────────────────
-// Search bar listeners
-// ─────────────────────────────────────────────
+
+// ── PAGE SECTION 6 : A–Z ROW CLICKS ──────────────────────────
+// Matches static <span class="az-btn"> elements in index.html
+document.getElementById('az-row').addEventListener('click', function(e) {
+  if (!e.target.matches('.az-btn')) return;
+  const letter = e.target.dataset.letter;
+  if (currentLetter === letter) {
+    currentLetter = '';
+    e.target.classList.remove('active');
+  } else {
+    currentLetter = letter;
+    document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
+    e.target.classList.add('active');
+  }
+  currentSearch = '';
+  document.getElementById('font-search').value = '';
+  hideSuggestions();
+  renderFontList();
+});
+// ── END PAGE SECTION 6 : A–Z ROW CLICKS ──────────────────────
+
+
+// ── PAGE SECTION 7 : SEARCH BAR LISTENERS ────────────────────
+// Matches <div class="search-bar-container"> in index.html
 document.getElementById('font-search').addEventListener('input', function() {
   showSuggestions(this.value);
 });
@@ -514,7 +328,7 @@ document.getElementById('font-search').addEventListener('keyup', function(e) {
     currentLetter = '';
     document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
     hideSuggestions();
-    renderFonts();
+    renderFontList();
   }
 });
 
@@ -527,34 +341,74 @@ document.getElementById('search-btn').addEventListener('click', function() {
   currentLetter = '';
   document.querySelectorAll('.az-btn').forEach(function(b) { b.classList.remove('active'); });
   hideSuggestions();
-  renderFonts();
+  renderFontList();
+});
+// ── END PAGE SECTION 7 : SEARCH BAR LISTENERS ────────────────
+
+
+// ── PAGE SECTION 8 : CONTROLS — SIZE, WEIGHT, COLOR, ITALIC ──
+// Matches Step 3, 4, 5 controls in index.html
+
+document.getElementById('font-size-control').addEventListener('change', function() {
+  updateAllPreviews();
 });
 
-// ─────────────────────────────────────────────
-// Fetch fonts from Google Fonts API
-// ─────────────────────────────────────────────
+document.getElementById('font-weight-control').addEventListener('change', function() {
+  updateAllPreviews();
+});
+
+document.getElementById('color-picker').addEventListener('input', function() {
+  updateAllPreviews();
+});
+
+document.getElementById('italic-toggle').addEventListener('click', function() {
+  this.classList.toggle('active');
+  updateAllPreviews();
+});
+
+// Variant buttons (Step 4 static HTML buttons with data-weight)
+document.getElementById('variants').addEventListener('click', function(e) {
+  if (!e.target.matches('.gold-btn')) return;
+  document.querySelectorAll('#variants .gold-btn').forEach(function(b) {
+    b.className = 'gold-btn';
+  });
+  e.target.className = 'gold-btn-active';
+  const weightEl = document.getElementById('font-weight-control');
+  if (weightEl) weightEl.value = e.target.dataset.weight;
+  updateAllPreviews();
+});
+// ── END PAGE SECTION 8 : CONTROLS ────────────────────────────
+
+
+// ── PAGE SECTION 9 : FONT PREVIEW TEXT INPUT ─────────────────
+// Matches <input id="font-preview-text"> in index.html
+document.getElementById('font-preview-text').addEventListener('input', function() {
+  updateAllPreviews();
+});
+// ── END PAGE SECTION 9 : FONT PREVIEW TEXT INPUT ─────────────
+
+
+// ── PAGE SECTION 10 : LOAD FONTS FROM API ────────────────────
 async function loadFonts() {
-  const container = document.getElementById('font-container');
   try {
     const url  = 'https://www.googleapis.com/webfonts/v1/webfonts?key=' + API_KEY + '&sort=popularity';
     const res  = await fetch(url);
     if (!res.ok) throw new Error('API error ' + res.status);
     const data = await res.json();
     allFonts   = data.items;
-    container.classList.remove('hidden');
-    renderFonts('all');
-    buildAZRow();
+    renderFontList('all');
   } catch (err) {
-    container.classList.remove('hidden');
-    const errCard = document.createElement('div');
-    errCard.className = 'card';
-    const errMsg = document.createElement('p');
-    errMsg.className = 'tip-box';
-    errMsg.textContent = 'Could not load fonts. Make sure your API key is set correctly.';
-    errCard.appendChild(errMsg);
-    container.appendChild(errCard);
+    const list = document.getElementById('font-list');
+    if (list) {
+      list.innerHTML = '';
+      const errMsg = document.createElement('span');
+      errMsg.className   = 'font-list-name';
+      errMsg.textContent = 'Could not load fonts. Check your API key.';
+      list.appendChild(errMsg);
+    }
     console.error(err);
   }
 }
 
 loadFonts();
+// ── END PAGE SECTION 10 : LOAD FONTS FROM API ────────────────

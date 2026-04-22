@@ -55,7 +55,7 @@ h3 {
 }
 
 h4 {
-  font-family: 'Playfair Display', serif;
+  
   font-weight: 400;
   font-size: 16px;
   color: var(--text);
@@ -120,12 +120,36 @@ hr {
   transition: background 0.2s, color 0.2s;
 }
 
-.nav-btn.active {
+.gold-btn-active {
+	flex-shrink: 0;
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  padding: 6px 12px;
+  background: rgba(200,169,110,0.15);
+  font-family: 'Bree Serif', serif;
+  font-size: 13px;
+  color: var(--gold);
+  cursor: pointer;
+  white-space: nowrap;
   background: var(--gold);
   color: #0a0904;
 }
 
 .gold-btn {
+  flex-shrink: 0;
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  padding: 6px 12px;
+  background: rgba(200,169,110,0.15);
+  font-family: 'Bree Serif', serif;
+  font-size: 13px;
+  color: var(--gold);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.gold-btn-42 {
   flex-shrink: 0;
   border: 1px solid var(--gold);
   border-radius: 6px;
@@ -181,6 +205,7 @@ hr {
 
 .card {
   display: flex;
+  min-width: 100%;
   flex-direction: column;
   border: 1px solid var(--gold-border);
   border-radius: 14px;
@@ -450,4 +475,182 @@ code {
 
 .dropdown-item:active {
   background: #1e3a5f;
+}
+/* ── TOOLBOX ROW (TRUE SINGLE-LINE TOOLBAR) ───────── */
+.toolbox-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+
+  width: 100%;
+  overflow-x: auto; /* prevents wrapping, enables horizontal scroll if needed */
+
+  padding: 6px 0;
+}
+
+/* ── TOOL ITEMS (COMPACT) ─────────────────────────── */
+.toolbox-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  flex: 0 0 auto; /* CRITICAL: prevents stretching */
+}
+
+/* ── LABELS (SMALL + CLEAN) ───────────────────────── */
+.toolbox-item label {
+  font-size: 10px;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+/* ── INPUTS (STOP FULL WIDTH EXPANSION) ───────────── */
+.toolbox-item input,
+.toolbox-item select {
+  width: auto;        /* CRITICAL FIX */
+  min-width: 70px;    /* keeps usability */
+  max-width: 90px;    /* forces compact layout */
+  font-size: 12px;
+}
+
+/* ── RANGE SLIDERS (SPECIFIC TIGHT CONTROL) ───────── */
+.toolbox-item input[type="range"] {
+  width: 80px;
+}
+
+/* ── BUTTONS (B / I) SMALL TOOL STYLE ─────────────── */
+.toolbox-item button {
+  width: 28px;
+  height: 28px;
+
+  padding: 0;
+  font-size: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 6px;
+}
+
+/* ── SELECT DROPDOWN (FONT FAMILY) ───────────────── */
+.toolbox-item select {
+  height: 28px;
+  padding: 2px 4px;
+  font-size: 12px;
+}
+/* ================================================================
+   TOOL ROW
+   ================================================================ */
+.tool-row {
+    display: flex; gap: 10px;
+    align-items: center;
+    margin: 14px 14px 14px 14px;
+}
+.tool-row.space-between { justify-content: space-between; }
+
+/* --- SEARCH BAR CONTAINER --- */
+.search-bar-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 0px;
+    padding: 5px 5px;
+}
+/* --- SEARCH INPUT --- */
+.search-input {
+	flex: 1;
+	height: 44px;
+	max-width: 100%;
+	border-radius: 4px;
+	background: var(--blue-btn-bg);
+	color: gold;
+	font-family: 'Space Mono', monospace;
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	outline: none;
+	box-shadow: inset 0 1px 0 rgba(180,230,255,0.08);
+	border: 2px solid gold;
+	
+	margin: 0px;
+	padding: 5px;
+}
+.search-input::placeholder {
+	color: rgba(255,255,255,0.9);
+}
+.search-input:focus {
+	border: 2px solid gold;
+}
+/* ================================================================
+   FONT LIST CARD — compact inline font names
+   ================================================================ */
+
+.font-list-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  line-height: 1.8;
+}
+
+.font-list-name {
+  font-size: 12px;
+  color: var(--gold);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.font-list-name:active {
+  background: var(--gold);
+  color: #0a0904;
+}
+
+.font-list-name.active {
+  background: var(--gold);
+  color: #0a0904;
+  font-weight: bold;
+}
+
+.font-list-dot {
+  font-size: 0.6rem;
+  color: #555;
+}
+
+/* ================================================================
+   FONT LIST INFO BADGES
+   ================================================================ */
+
+#font-list-category,
+#font-list-total,
+#font-list-showing {
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: default;
+}
+
+/* ================================================================
+   FONT PREVIEW TEXT INPUT
+   ================================================================ */
+
+#font-preview-text {
+  width: 100%;
+  height: 44px;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--gold);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  outline: none;
+  border: 2px solid var(--gold);
+  padding: 5px 10px;
+}
+
+#font-preview-text::placeholder {
+  color: var(--text-muted);
 }

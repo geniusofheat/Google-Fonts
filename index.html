@@ -11,51 +11,284 @@
 </head>
 <body>
 
-<!-- ── Section 1 : Header and Nav ── -->
-<div class="section">
 
-  <h3>Google Fonts :</h3>
-  <p>Please choose a font type.</p>
+<!-- ============================================================
+     STEP 1 : SELECT A FONT TYPE
+     Contains: heading, nav buttons, search bar, A-Z row,
+               font list card, font family preview
+     ============================================================ -->
+<div class="card">
 
-  <!-- NAV ROW -->
+  <h4>Step 1 : Select A Font Type</h4>
+
+  <!-- NAV BUTTONS -->
   <div class="nav-row" id="font-family-options">
-    <button class="nav-btn active" data-cat="all">All</button>
-    <button class="nav-btn" data-cat="serif">Serif</button>
-    <button class="nav-btn" data-cat="sans-serif">Sans-Serif</button>
-    <button class="nav-btn" data-cat="monospace">Monospace</button>
-    <button class="nav-btn" data-cat="display">Display</button>
-    <button class="nav-btn" data-cat="handwriting">Handwriting</button>
-  </div><!-- ENDS NAV-ROW -->
-
-  <hr>
+    <button class="gold-btn-active" data-cat="all">All</button>
+    <button class="gold-btn" data-cat="serif">Serif</button>
+    <button class="gold-btn" data-cat="sans-serif">Sans-Serif</button>
+    <button class="gold-btn" data-cat="monospace">Monospace</button>
+    <button class="gold-btn" data-cat="display">Display</button>
+    <button class="gold-btn" data-cat="handwriting">Handwriting</button>
+  </div>
+  <!-- END NAV BUTTONS -->
 
   <!-- SEARCH BAR -->
-  <div id="search-wrap">
-    <input type="text" id="font-search" placeholder="Search all fonts..." autocomplete="off" />
-    <button id="search-btn">🔍</button>
+  <div class="search-bar-container">
+    <input type="text" id="font-search" class="search-input"
+      placeholder="Search all fonts... :"
+      autocomplete="off">
+    <button id="search-btn" class="gold-btn-42">🔍</button>
+
+    <!-- SEARCH DROPDOWN -->
+    <div id="search-dropdown"></div>
+    <!-- END SEARCH DROPDOWN -->
+
   </div>
-  <div id="search-dropdown"></div>
+  <!-- END SEARCH BAR -->
 
   <!-- A–Z ROW -->
-  <div id="az-row"></div>
+  <div id="az-row" class="nav-row">
+    <span class="az-btn" data-letter="A">A</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="B">B</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="C">C</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="D">D</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="E">E</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="F">F</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="G">G</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="H">H</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="I">I</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="J">J</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="K">K</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="L">L</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="M">M</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="N">N</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="O">O</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="P">P</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="Q">Q</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="R">R</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="S">S</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="T">T</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="U">U</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="V">V</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="W">W</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="X">X</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="Y">Y</span><span class="az-dot">·</span>
+    <span class="az-btn" data-letter="Z">Z</span>
+  </div>
+<!-- END A–Z ROW -->
 
-</div><!-- ENDS SECTION 1 -->
-
-<!-- ── Section 2 : Font List and Codeboxes ── -->
-<div class="section">
-
-  <!-- FONT LIST -->
-  <div id="font-container" class="hidden"></div>
-  <!-- ENDS FONT LIST -->
+</div>
+<!-- END STEP 1 -->
 
 
+<!-- ============================================================
+     STEP 2 : SELECT A FONT FAMILY
+============================================================ -->
+<div class="card">
 
-</div><!-- ENDS SECTION 2 -->
+  <h4>Step 2 : Select A Font Family :</h4>
+  <p>Once you select a Font Family, the Font Preview will update with the selected style.</p>
+</div>
+<!-- FONT LIST CARD -->
+<div id="font-list-card" class="nav-row">
+	
+      <span class="gold-btn" id="font-list-category">Category: All</span>
+      <span class="gold-btn" id="font-list-total">Total: 0</span>
+      <span class="gold-btn" id="font-list-showing">Showing: A–Z</span>
+</div>
+    <!-- END INFO ROW -->
+
+  
+<!-- FONT NAMES LIST -->
+  <div id="font-list" class="font-list-inline"></div>
+<!-- END FONT NAMES LIST -->
+
+  </div>
+  <!-- END FONT LIST CARD -->
+  
+  <h4>Step 2 : Font Style Preview :</h4>
+
+  <!-- FONT FAMILY PREVIEW -->
+  <div id="font-family-preview" class="font-preview-text"></div>
+  <!-- END FONT FAMILY PREVIEW -->
+
+<!-- END FONT FAMILY DROPDOWN -->
+
+  <p>Each font has to be retrieved from the Google cloud server. Once you choose a font the codebox will provide you with the link you need to paste into the head section of your HTML.</p>
+
+
+
+ <!-- FONT CONTAINER — JS injects font cards here -->
+  <div id="font-container"></div>
+ <!-- END FONT CONTAINER -->
+
+
+ <!-- CODEBOX 1 : FONT RETRIEVAL LINK -->
+  <h4>Codebox 1 : Font retrieval link</h4>
+  <p>Copy the link below and add it to the head section of your HTML.</p>
+  <div class="gold-block">
+    <code id="static-code-1"></code>
+    <button class="gold-btn" id="copy-btn-1" onclick="copyStatic('static-code-1','copy-btn-1')">📋 Copy</button>
+  </div>
+  <!-- END CODEBOX 1 -->
+
+</div>
+<!-- END STEP 2 -->
+
+
+<!-- ============================================================
+     STEP 3 : SELECT FONT SIZE
+     Contains: size dropdown, font size preview
+     ============================================================ -->
+<div class="card">
+
+  <h4>Select Font Size :</h4>
+
+  <!-- FONT SIZE CONTROL -->
+  <div class="gold-block">
+    <label for="font-size-control">Size (px)</label>
+    <select id="font-size-control">
+      <option>12</option>
+      <option>14</option>
+      <option>16</option>
+      <option>18</option>
+      <option>20</option>
+      <option>24</option>
+      <option>28</option>
+      <option>32</option>
+      <option>40</option>
+      <option>48</option>
+      <option>60</option>
+      <option>72</option>
+    </select>
+  </div>
+  <!-- END FONT SIZE CONTROL -->
+
+  <!-- FONT SIZE PREVIEW -->
+  <div id="font-size-preview" class="font-preview-text"></div>
+  <!-- END FONT SIZE PREVIEW -->
+
+</div>
+<!-- END STEP 3 -->
+
+
+<!-- ============================================================
+     STEP 4 : SELECT FONT WEIGHT
+     Contains: variant buttons, weight dropdown,
+               italic toggle, font weight preview
+     ============================================================ -->
+<div class="card">
+
+  <h4>Select Font Weight :</h4>
+
+  <!-- VARIANT BUTTONS -->
+  <div id="variants" class="nav-row">
+    <button class="gold-btn" data-weight="100">Thin</button>
+    <button class="gold-btn" data-weight="200">Extra Light</button>
+    <button class="gold-btn" data-weight="300">Light</button>
+    <button class="gold-btn" data-weight="400">Regular</button>
+    <button class="gold-btn" data-weight="500">Medium</button>
+    <button class="gold-btn" data-weight="600">Semi Bold</button>
+    <button class="gold-btn" data-weight="700">Bold</button>
+    <button class="gold-btn" data-weight="800">Extra Bold</button>
+    <button class="gold-btn" data-weight="900">Black</button>
+  </div>
+  <!-- END VARIANT BUTTONS -->
+
+  <!-- WEIGHT DROPDOWN + ITALIC TOGGLE -->
+  <div class="gold-block">
+    <label for="font-weight-control"></label>
+    <select id="font-weight-control">
+      <option value="100">Thin</option>
+      <option value="200">Extra Light</option>
+      <option value="300">Light</option>
+      <option value="400" selected>Regular</option>
+      <option value="500">Medium</option>
+      <option value="600">Semi Bold</option>
+      <option value="700">Bold</option>
+      <option value="800">Extra Bold</option>
+      <option value="900">Black</option>
+    </select>
+    <button id="italic-toggle">I</button>
+  </div>
+  <!-- END WEIGHT DROPDOWN + ITALIC TOGGLE -->
+
+  <!-- FONT WEIGHT PREVIEW -->
+  <div id="font-weight-preview" class="font-preview-text"></div>
+  <!-- END FONT WEIGHT PREVIEW -->
+
+</div>
+<!-- END STEP 4 -->
+
+
+<!-- ============================================================
+     STEP 5 : SELECT FONT COLOR
+     Contains: color picker, font color preview
+     ============================================================ -->
+<div class="card">
+
+  <h4>Select Font Color :</h4>
+
+  <!-- COLOR PICKER -->
+  <div class="gold-block">
+    <label for="color-picker"></label>
+    <input type="color" id="color-picker">
+  </div>
+  <!-- END COLOR PICKER -->
+
+  <!-- FONT COLOR PREVIEW -->
+  <div id="font-color-preview" class="font-preview-text"></div>
+  <!-- END FONT COLOR PREVIEW -->
+
+</div>
+<!-- END STEP 5 -->
+
+
+<!-- ============================================================
+     STEP 6 : FONT PREVIEW TEXT INPUT
+     Contains: text input that updates all preview boxes
+     ============================================================ -->
+<div class="card">
+
+  <h4>Preview Your Font :</h4>
+  <p>Type any word or sentence below. It will appear in all preview boxes using your chosen font settings.</p>
+
+  <!-- FONT PREVIEW TEXT INPUT -->
+  <div class="gold-block">
+    <input type="text" id="font-preview-text" class="search-input"
+      placeholder="Type something to preview..."
+      autocomplete="off">
+  </div>
+  <!-- END FONT PREVIEW TEXT INPUT -->
+
+</div>
+<!-- END STEP 6 -->
+
+
+<!-- ============================================================
+     STEP 7 : CSS OUTPUT — CODEBOX 2
+     Contains: CSS rules codebox with copy button
+     ============================================================ -->
+<div class="card">
+
+  <h4>Codebox 2 : CSS Rules</h4>
+  <p>The font family name and its attributes are shown below based on your selections. Copy and paste the CSS into your stylesheet.</p>
+
+  <!-- CODEBOX 2 -->
+  <div class="gold-block">
+    <code id="static-code-2"></code>
+    <button class="gold-btn" id="copy-btn-2" onclick="copyStatic('static-code-2','copy-btn-2')">📋 Copy</button>
+  </div>
+  <!-- END CODEBOX 2 -->
+
+</div>
+<!-- END STEP 7 -->
+
 
 <script src="google_fonts_data.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/Google-Fonts/_service_worker.js');
+  navigator.serviceWorker.register('/Google-Fonts/service_worker.js');
 }
 </script>
 
