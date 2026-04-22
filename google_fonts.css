@@ -594,6 +594,8 @@ code {
   gap: 4px;
   padding: 8px 4px;
   line-height: 1.8;
+  background: transparent;
+  color: gold;
 }
 
 .font-list-name {
