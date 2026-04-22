@@ -149,17 +149,25 @@ function buildAZRow() {
 }
 
 // ─────────────────────────────────────────────
-// Build a gold code block with copy button
+// Build a labeled gold code block with copy button
 // ─────────────────────────────────────────────
-function makeGoldBlock(labelText) {
+function makeGoldBlock(h4Text, paragraphs) {
   const wrap = document.createElement('div');
-  wrap.style.marginTop = '10px';
+  wrap.style.marginTop = '12px';
 
-  const heading = document.createElement('div');
-  heading.className = 'blue-block';
-  heading.textContent = labelText;
-  wrap.appendChild(heading);
+  // h4 heading
+  const h4 = document.createElement('h4');
+  h4.textContent = h4Text;
+  wrap.appendChild(h4);
 
+  // paragraphs
+  paragraphs.forEach(function(txt) {
+    const p = document.createElement('p');
+    p.textContent = txt;
+    wrap.appendChild(p);
+  });
+
+  // gold block with code + copy button
   const block = document.createElement('div');
   block.className = 'gold-block';
 
@@ -276,9 +284,19 @@ function toggleVariants(card, font) {
   preview.className   = 'font-preview-text';
   preview.textContent = font.family;
 
-  // ── Inline code boxes ──
-  const box1 = makeGoldBlock('◆ HTML Link Tag ◆');
-  const box2 = makeGoldBlock('◆ CSS Rules ◆');
+  // ── Inline code boxes with labels and descriptions ──
+  const box1 = makeGoldBlock(
+    'Codebox #1 : Font retrieval link',
+    ['Each font has to be retrieved from the Google cloud server. Copy the link below and add it to the head section of your HTML.']
+  );
+
+  const box2 = makeGoldBlock(
+    'Codebox #2 : CSS Rules',
+    [
+      'Use the toolbar to change the font styles. The changes will be reflected on the font preview.',
+      'The font family name and its attributes are created in the output codebox below. Copy and paste the style attributes into your stylesheet.'
+    ]
+  );
 
   // ── Sync everything ──
   function syncAll() {
@@ -298,7 +316,6 @@ function toggleVariants(card, font) {
     box1.codeEl.textContent = linkCode;
     box2.codeEl.textContent = cssCode;
 
-    // Also sync bottom page code boxes
     const c1 = document.getElementById('static-code-1');
     const c2 = document.getElementById('static-code-2');
     if (c1) c1.textContent = linkCode;
