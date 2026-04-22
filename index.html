@@ -11,43 +11,6 @@
 </head>
 <body>
 
-
-<!-- ============================================================
-     STEP 1 : SELECT A FONT TYPE
-     Contains: heading, nav buttons, search bar, A-Z row,
-               font list card, font family preview
-     ============================================================ -->
-<div class="card">
-
-  <h4>Step 1 : Select A Font Type</h4>
-
-  <!-- NAV BUTTONS -->
-  <div class="nav-row" id="font-family-options">
-    <button class="gold-btn-active" data-cat="all">All</button>
-    <button class="gold-btn" data-cat="serif">Serif</button>
-    <button class="gold-btn" data-cat="sans-serif">Sans-Serif</button>
-    <button class="gold-btn" data-cat="monospace">Monospace</button>
-    <button class="gold-btn" data-cat="display">Display</button>
-    <button class="gold-btn" data-cat="handwriting">Handwriting</button>
-  </div>
-<!-- END NAV BUTTONS -->
-  
-
-<!-- INFO SECTION -->
-<div id="font-list-card" class="nav-row">
-	
-      <span class="gold-btn" style="height: 20px;" id="font-list-category">Category: All</span>
-      <span class="gold-btn" style="height: 20px;" id="font-list-total">Total: 0</span>
-      <span class="gold-btn" style="height: 20px;" id="font-list-showing">Showing: A–Z</span>
-</div>
-
-<!-- FONT FAMILY NAV ROW -->
-<div id="font-page-nav" class="nav-row"></div>
-<!-- END NAV ROW -->
-
-<!-- END INFO SECTION -->
-
-
   <!-- SEARCH BAR -->
   <div class="search-bar-container">
     <input type="text" id="font-search" class="search-input"
@@ -93,6 +56,44 @@
   </div>
 <!-- END A–Z ROW -->
 
+
+<!-- ============================================================
+     STEP 1 : SELECT A FONT TYPE
+     Contains: heading, nav buttons, search bar, A-Z row,
+               font list card, font family preview
+     ============================================================ -->
+<div class="card">
+
+  <h4>Step 1 : Select A Font Type</h4>
+
+  <!-- NAV BUTTONS -->
+  <div class="nav-row" id="font-family-options">
+    <button class="gold-btn-active" data-cat="all">All</button>
+    <button class="gold-btn" data-cat="serif">Serif</button>
+    <button class="gold-btn" data-cat="sans-serif">Sans-Serif</button>
+    <button class="gold-btn" data-cat="monospace">Monospace</button>
+    <button class="gold-btn" data-cat="display">Display</button>
+    <button class="gold-btn" data-cat="handwriting">Handwriting</button>
+  </div>
+<!-- END NAV BUTTONS -->
+  
+
+<!-- INFO SECTION -->
+<div id="font-list-card" class="nav-row">
+	
+      <span class="gold-btn" style="height: 20px;" id="font-list-category">Category: All</span>
+      <span class="gold-btn" style="height: 20px;" id="font-list-total">Total: 0</span>
+      <span class="gold-btn" style="height: 20px;" id="font-list-showing">Showing: A–Z</span>
+</div>
+
+<!-- FONT FAMILY NAV ROW -->
+<div id="font-page-nav" class="nav-row"></div>
+<!-- END NAV ROW -->
+
+<!-- END INFO SECTION -->
+
+
+
 </div>
 <!-- END STEP 1 -->
 
@@ -106,7 +107,7 @@
   <p>Once you select a Font Family, the Font Preview will update with the selected style.</p>
 </div>
 
-<!-- FONT NAMES LIST -->
+<!-- FONT FAMILY LIST -->
   <div id="font-list" class="font-list-inline"></div>
 <!-- END FONT NAMES LIST -->
 
