@@ -404,9 +404,10 @@ function toggleVariants(card, font) {
   // ── Assemble panel ──
   panel.appendChild(variantWrap);
   panel.appendChild(toolHeading);
+  panel.appendChild(box1.wrap);
   panel.appendChild(toolbar);
   panel.appendChild(preview);
-  panel.appendChild(box1.wrap);
+  
   panel.appendChild(box2.wrap);
 
   card.appendChild(panel);
