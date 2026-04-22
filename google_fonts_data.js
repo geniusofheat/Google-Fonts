@@ -32,7 +32,7 @@ function loadFontFace(name, url) {
 }
 
 // ─────────────────────────────────────────────
-// Copy static code boxes
+// Copy static code boxes (bottom of page)
 // ─────────────────────────────────────────────
 function copyStatic(codeId, btnId) {
   const code = document.getElementById(codeId).textContent.trim();
@@ -64,14 +64,6 @@ function getWeightLabel(variant) {
 function getWeightNumber(variant) {
   if (variant === 'regular' || variant === 'italic') return '400';
   return variant.replace('italic', '').trim();
-}
-
-// ─────────────────────────────────────────────
-// Clear both static code boxes
-// ─────────────────────────────────────────────
-function clearCodeBoxes() {
-  document.getElementById('static-code-1').textContent = '';
-  document.getElementById('static-code-2').textContent = '';
 }
 
 // ─────────────────────────────────────────────
@@ -157,34 +149,50 @@ function buildAZRow() {
 }
 
 // ─────────────────────────────────────────────
-// Sync code boxes with current font + state
+// Build a gold code block with copy button
 // ─────────────────────────────────────────────
-function syncCodeBoxes(font, variant, state) {
-  const weightNum = getWeightNumber(variant);
-  const isItalic  = variant.includes('italic') || state.italic;
+function makeGoldBlock(labelText) {
+  const wrap = document.createElement('div');
+  wrap.style.marginTop = '10px';
 
-  const linkCode = '<link href="https://fonts.googleapis.com/css2?family=' +
-    font.family.replace(/\s+/g, '+') +
-    ':wght@' + weightNum + '&display=swap" rel="stylesheet">';
+  const heading = document.createElement('div');
+  heading.className = 'blue-block';
+  heading.textContent = labelText;
+  wrap.appendChild(heading);
 
-  let cssCode = "font-family: '" + font.family + "', " + font.category + ';\n' +
-                'font-size: '   + state.size   + 'px;\n' +
-                'font-weight: ' + state.weight + ';\n' +
-                'font-style: '  + (isItalic ? 'italic' : 'normal') + ';\n' +
-                'color: '       + state.color  + ';';
+  const block = document.createElement('div');
+  block.className = 'gold-block';
 
-  document.getElementById('static-code-1').textContent = linkCode;
-  document.getElementById('static-code-2').textContent = cssCode;
+  const codeEl = document.createElement('code');
+  codeEl.textContent = '';
+
+  const copyBtn = document.createElement('button');
+  copyBtn.className   = 'gold-btn';
+  copyBtn.textContent = '📋 Copy';
+  copyBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const text = codeEl.textContent.trim();
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(function() {
+      copyBtn.textContent = '✓ Copied';
+      setTimeout(function() { copyBtn.textContent = '📋 Copy'; }, 2000);
+    });
+  });
+
+  block.appendChild(codeEl);
+  block.appendChild(copyBtn);
+  wrap.appendChild(block);
+
+  return { wrap, codeEl };
 }
 
 // ─────────────────────────────────────────────
-// Font card expander with toolbar
+// Font card expander with toolbar + inline code boxes
 // ─────────────────────────────────────────────
 function toggleVariants(card, font) {
   const existing = card.querySelector('.font-expanded');
   if (existing) {
     existing.remove();
-    clearCodeBoxes();
     return;
   }
 
@@ -216,11 +224,6 @@ function toggleVariants(card, font) {
   const variantWrap = document.createElement('div');
   variantWrap.className = 'variant-row';
 
-  // ── Preview area ──
-  const preview = document.createElement('div');
-  preview.className = 'font-preview-text';
-  preview.textContent = font.family;
-
   // ── Step 2 heading ──
   const toolHeading = document.createElement('div');
   toolHeading.className = 'blue-block';
@@ -231,9 +234,8 @@ function toggleVariants(card, font) {
   const toolbar = document.createElement('div');
   toolbar.className = 'font-preview-tools';
 
-  // Size label + slider
   const sizeLabel = document.createElement('p');
-  sizeLabel.textContent = 'Size : ' + state.size + 'px';
+  sizeLabel.textContent    = 'Size : ' + state.size + 'px';
   sizeLabel.style.marginBottom = '2px';
 
   const sizeSlider = document.createElement('input');
@@ -242,7 +244,6 @@ function toggleVariants(card, font) {
   sizeSlider.max   = 72;
   sizeSlider.value = state.size;
 
-  // Bold / Italic / Color row
   const styleRow = document.createElement('div');
   styleRow.style.display    = 'flex';
   styleRow.style.gap        = '8px';
@@ -254,24 +255,56 @@ function toggleVariants(card, font) {
   boldBtn.title = 'Toggle Bold';
 
   const italicBtn = document.createElement('button');
-  italicBtn.textContent = 'I';
+  italicBtn.textContent   = 'I';
   italicBtn.style.fontStyle = 'italic';
   italicBtn.title = 'Toggle Italic';
 
   const colorLabel = document.createElement('span');
-  colorLabel.textContent = 'Color :';
-  colorLabel.style.color    = 'var(--gold)';
+  colorLabel.textContent  = 'Color :';
+  colorLabel.style.color  = 'var(--gold)';
   colorLabel.style.fontSize = '13px';
 
   const colorPicker = document.createElement('input');
   colorPicker.type  = 'color';
   colorPicker.value = state.color;
-  colorPicker.title = 'Pick color';
 
   styleRow.append(boldBtn, italicBtn, colorLabel, colorPicker);
   toolbar.append(sizeLabel, sizeSlider, styleRow);
 
-  // ── Update preview and code boxes ──
+  // ── Preview ──
+  const preview = document.createElement('div');
+  preview.className   = 'font-preview-text';
+  preview.textContent = font.family;
+
+  // ── Inline code boxes ──
+  const box1 = makeGoldBlock('◆ HTML Link Tag ◆');
+  const box2 = makeGoldBlock('◆ CSS Rules ◆');
+
+  // ── Sync everything ──
+  function syncAll() {
+    const weightNum = getWeightNumber(state.variant);
+    const isItalic  = state.italic;
+
+    const linkCode = '<link href="https://fonts.googleapis.com/css2?family=' +
+      font.family.replace(/\s+/g, '+') +
+      ':wght@' + weightNum + '&display=swap" rel="stylesheet">';
+
+    const cssCode = "font-family: '" + font.family + "', " + font.category + ';\n' +
+                    'font-size: '    + state.size   + 'px;\n' +
+                    'font-weight: '  + state.weight + ';\n' +
+                    'font-style: '   + (isItalic ? 'italic' : 'normal') + ';\n' +
+                    'color: '        + state.color  + ';';
+
+    box1.codeEl.textContent = linkCode;
+    box2.codeEl.textContent = cssCode;
+
+    // Also sync bottom page code boxes
+    const c1 = document.getElementById('static-code-1');
+    const c2 = document.getElementById('static-code-2');
+    if (c1) c1.textContent = linkCode;
+    if (c2) c2.textContent = cssCode;
+  }
+
   function updateAll() {
     preview.style.fontSize     = state.size   + 'px';
     preview.style.fontWeight   = state.weight;
@@ -282,12 +315,12 @@ function toggleVariants(card, font) {
     boldBtn.style.color        = state.weight === 700 ? '#0a0904'     : '';
     italicBtn.style.background = state.italic ? 'var(--gold)' : '';
     italicBtn.style.color      = state.italic ? '#0a0904'     : '';
-    syncCodeBoxes(font, state.variant, state);
+    syncAll();
   }
 
-  // ── Toolbar events — stopPropagation prevents card from collapsing ──
-  sizeSlider.addEventListener('click',  function(e) { e.stopPropagation(); });
-  sizeSlider.addEventListener('input',  function(e) {
+  // ── Toolbar events ──
+  sizeSlider.addEventListener('click', function(e) { e.stopPropagation(); });
+  sizeSlider.addEventListener('input', function(e) {
     e.stopPropagation();
     state.size = parseInt(this.value);
     updateAll();
@@ -312,7 +345,7 @@ function toggleVariants(card, font) {
     updateAll();
   });
 
-  // ── Build variant buttons ──
+  // ── Variant buttons ──
   Object.entries(font.files).forEach(function(entry) {
     const variant  = entry[0];
     const fileUrl  = entry[1];
@@ -351,12 +384,15 @@ function toggleVariants(card, font) {
   const firstBtn = variantWrap.querySelector('.variant-btn');
   if (firstBtn) firstBtn.classList.add('active');
 
+  // ── Assemble panel ──
   panel.appendChild(variantWrap);
   panel.appendChild(toolHeading);
   panel.appendChild(toolbar);
   panel.appendChild(preview);
-  card.appendChild(panel);
+  panel.appendChild(box1.wrap);
+  panel.appendChild(box2.wrap);
 
+  card.appendChild(panel);
   updateAll();
 }
 
