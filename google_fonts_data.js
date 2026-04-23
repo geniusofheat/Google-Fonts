@@ -75,7 +75,13 @@ function updateAllPreviews() {
 
   const color      = document.getElementById('color-picker').value;
   const isItalic   = document.getElementById('italic-toggle').classList.contains('active');
-  const fontFamily = selectedFont ? '"' + selectedFont.family + '", serif' : 'inherit';
+  const safeName = selectedFont
+  ? selectedFont.family.replace(/\s+/g, '_') + '_preview'
+  : null;
+
+  const fontFamily = safeName
+  ? '"' + safeName + '", serif'
+  : 'inherit';
 
   const previews = [
     document.getElementById('font-preview-output'),
