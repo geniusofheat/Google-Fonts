@@ -268,13 +268,13 @@ function renderFontPage() {
     loadFontFace(safeName, font.menu);
 
     const li = document.createElement('li');
-    li.className       = 'font-family-list-item';
+    li.className       = 'font-list-item';
     li.textContent     = font.family;
     li.style.fontFamily = '"' + safeName + '", serif';
 
     li.addEventListener('click', function() {
       // Mark active
-      ol.querySelectorAll('.font-family-list-item').forEach(function(item) {
+      ol.querySelectorAll('.font-list-item').forEach(function(item) {
         item.classList.remove('active');
       });
       li.classList.add('active');
@@ -336,7 +336,7 @@ function renderFontList(category) {
   // Update info badges
   const catEl     = null;
   const totalEl   = document.getElementById('font-list-total');
-  const showingEl = document.getElementById('font-family-list-showing');
+  const showingEl = document.getElementById('font-list-showing');
 
   if (catEl)     catEl.textContent     = 'Category: ' + (currentCategory === 'all' ? 'All' : currentCategory);
   if (totalEl)   totalEl.textContent   = 'Total: ' + filteredFonts.length;
