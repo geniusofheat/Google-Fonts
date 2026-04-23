@@ -456,8 +456,23 @@ preview.textContent = value || 'Your text will appear here';
 
 // ── END PAGE SECTION 11 : FONT PREVIEW INPUT HANDLER ───────────
 
+// ── PAGE SECTION 12 : VERTICAL SLIDERS ───────────────────────
+document.getElementById('font-size-slider').addEventListener('input', function() {
+  const val = this.value;
+  document.getElementById('font-size-label').textContent = 'Size: ' + val + 'px';
+  document.getElementById('font-size-control').value = val;
+  updateAllPreviews();
+});
 
-// ── PAGE SECTION 12 : LOAD FONTS FROM API ────────────────────
+document.getElementById('font-weight-slider').addEventListener('input', function() {
+  const val = this.value;
+  document.getElementById('font-weight-label').textContent = 'Weight: ' + val;
+  document.getElementById('font-weight-control').value = val;
+  updateAllPreviews();
+});
+// ── END PAGE SECTION 12 : VERTICAL SLIDERS ───────────────────
+
+// ── PAGE SECTION 13: LOAD FONTS FROM API ────────────────────
 async function loadFonts() {
   try {
     const url  = 'https://www.googleapis.com/webfonts/v1/webfonts?key=' + API_KEY + '&sort=popularity';
@@ -478,5 +493,7 @@ async function loadFonts() {
   }
 }
 
+
+
 loadFonts();
-// ── END PAGE SECTION 12 : LOAD FONTS FROM API ────────────────
+// ── END PAGE SECTION 13 : LOAD FONTS FROM API ────────────────

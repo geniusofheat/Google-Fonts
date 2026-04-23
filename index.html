@@ -98,35 +98,41 @@
 
 
   <h4>Step 2 : Select A Font Family :</h4>
-
-<!-- BEGIN FONT SIZE CONTROL -->
-    <label for="font-size-control">Size (px)</label>
-    <select id="font-size-control">
-      <option>12</option>
-      <option>14</option>
-      <option>16</option>
-      <option>18</option>
-      <option>20</option>
-      <option>24</option>
-      <option>28</option>
-      <option>32</option>
-      <option>40</option>
-      <option>48</option>
-      <option>60</option>
-      <option>72</option>
-    </select>
-  </div>
-  <!-- END FONT SIZE CONTROL -->
-
+  
+	<p>Adjust the styles and the changes will be reflect in the preview.</p>
+	
 <!-- FONT FAMILY LIST --FILL DYNAMICALLY BY JAVASCRIPT API 1 - 5-->
-  <div id="font-family-list"></div>
+<div id="font-family-list"></div>
+
+<!-- FONT SIZE AND WEIGHT SLIDERS -->
+<div class="gold-block">
+<div class="slider-row">
+
+  <div class="slider-col">
+    <input type="range" id="font-size-slider" 
+      class="vertical-slider"
+      min="10" max="72" value="20"
+      orient="vertical">
+    <label for="font-size-slider" id="font-size-label">Size: 20px</label>
+  </div>
+
+  <div class="slider-col">
+    <input type="range" id="font-weight-slider"
+      class="vertical-slider"
+      min="100" max="900" step="100" value="400"
+      orient="vertical">
+    <label for="font-weight-slider" id="font-weight-label">Weight: 400</label>
+  </div>
+
+</div>
+</div>
+<!-- END FONT SIZE SLIDER -->
 <!-- FONT FAMILY LIST -->
   
+<!-- ============================================================ STEP 3 : GOOGLE FONTS CODEBOX LINK
+============================================================ -->
 
-
-<!-- STEP 3 : CODEBOX 1 -->
-
-  <H4>Step 4 : Link To Google Fonts :</H4>
+  <H4>Step 3 : Link To Google Fonts :</H4>
   <p>Each font has to be retrieved from the Google cloud server. Once you choose a font the codebox will provide you with the link you need to paste into the head section of your HTML.</p>
 
 
@@ -149,67 +155,19 @@
      ============================================================ -->
 <div class="card">
 
-  <h4>Select Font Size :</h4>
-
-  <!-- FONT SIZE CONTROL -->
-  <div class="gold-block">
+  <h4>Adjust Font Size :</h4>
 
 
-  <!-- FONT SIZE PREVIEW -->
-  <div id="font-size-preview" class="font-preview-text"></div>
-  <!-- END FONT SIZE PREVIEW -->
 
-</div>
-<!-- END STEP 3 -->
-
-
-<!-- ============================================================
-     STEP 4 : SELECT FONT WEIGHT
-     Contains: variant buttons, weight dropdown,
-               italic toggle, font weight preview
-     ============================================================ -->
 <div class="card">
 
   <h4>Select Font Weight :</h4>
 
   <!-- VARIANT BUTTONS -->
-  <div id="variants" class="nav-row">
-    <button class="gold-btn" data-weight="100">Thin</button>
-    <button class="gold-btn" data-weight="200">Extra Light</button>
-    <button class="gold-btn" data-weight="300">Light</button>
-    <button class="gold-btn" data-weight="400">Regular</button>
-    <button class="gold-btn" data-weight="500">Medium</button>
-    <button class="gold-btn" data-weight="600">Semi Bold</button>
-    <button class="gold-btn" data-weight="700">Bold</button>
-    <button class="gold-btn" data-weight="800">Extra Bold</button>
-    <button class="gold-btn" data-weight="900">Black</button>
-  </div>
-  <!-- END VARIANT BUTTONS -->
+  <div id="font-weight">
 
-  <!-- WEIGHT DROPDOWN + ITALIC TOGGLE -->
-  <div class="gold-block">
-    <label for="font-weight-control"></label>
-    <select id="font-weight-control">
-      <option value="100">Thin</option>
-      <option value="200">Extra Light</option>
-      <option value="300">Light</option>
-      <option value="400" selected>Regular</option>
-      <option value="500">Medium</option>
-      <option value="600">Semi Bold</option>
-      <option value="700">Bold</option>
-      <option value="800">Extra Bold</option>
-      <option value="900">Black</option>
-    </select>
-    <button id="italic-toggle">I</button>
-  </div>
-  <!-- END WEIGHT DROPDOWN + ITALIC TOGGLE -->
 
-  <!-- FONT WEIGHT PREVIEW -->
-  <div id="font-weight-preview" class="font-preview-text"></div>
-  <!-- END FONT WEIGHT PREVIEW -->
-
-</div>
-<!-- END STEP 4 -->
+<!-- END STEP
 
 
 <!-- ============================================================
