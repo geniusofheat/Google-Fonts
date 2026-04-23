@@ -99,58 +99,7 @@
 
   <h4>Step 2 : Select A Font Family :</h4>
 
-<!-- FONT FAMILY LIST --FILL DYNAMICALLY BY JAVASCRIPT API 1 - 5-->
-  <div id="font-family-list"></div>
-<!-- FONT FAMILY LIST -->
-  
-<!-- STEP 3 : PREVIEW BOX -->
-  <h4>Font Preview :</h4>
-  <p>Type a word into the preview box then select a font family from the list below. The text will be displayed in the style you choose.</p>
-  
-    <div class="search-bar-container">
-    <input id="font-preview-input" class="search-input" type="text" placeholder="Type something to preview fonts..."/>
-    </div>
-  
-
-  
- <div class="gold-block">
-  	
-<div id="font-preview-output" class="gold-block">
-    Your text will appear here.
-</div>
-</div>
-  
-<!-- END STEP 3 : PREVIEW BOX -->
-
-<!-- STEP 4 : CODEBOX 1 -->
-
-  <H4>Link To Google Fonts :</H4>
-  <p>Each font has to be retrieved from the Google cloud server. Once you choose a font the codebox will provide you with the link you need to paste into the head section of your HTML.</p>
-
-
- <!-- CODEBOX 1 : FONT RETRIEVAL LINK -->
-  <h4>Codebox 1 : Font retrieval link</h4>
-  <p>Copy the link below and add it to the head section of your HTML.</p>
-  <div class="gold-block">
-    <code id="static-code-1"></code>
-    <button class="gold-btn" id="copy-btn-1" onclick="copyStatic('static-code-1','copy-btn-1')">📋 Copy</button>
-  </div>
-  <!-- END CODEBOX 1 -->
-
-</div>
-<!-- END STEP 2 -->
-
-
-<!-- ============================================================
-     STEP 3 : SELECT FONT SIZE
-     Contains: size dropdown, font size preview
-     ============================================================ -->
-<div class="card">
-
-  <h4>Select Font Size :</h4>
-
-  <!-- FONT SIZE CONTROL -->
-  <div class="gold-block">
+<!-- BEGIN FONT SIZE CONTROL -->
     <label for="font-size-control">Size (px)</label>
     <select id="font-size-control">
       <option>12</option>
@@ -168,6 +117,43 @@
     </select>
   </div>
   <!-- END FONT SIZE CONTROL -->
+
+<!-- FONT FAMILY LIST --FILL DYNAMICALLY BY JAVASCRIPT API 1 - 5-->
+  <div id="font-family-list"></div>
+<!-- FONT FAMILY LIST -->
+  
+
+
+<!-- STEP 3 : CODEBOX 1 -->
+
+  <H4>Step 4 : Link To Google Fonts :</H4>
+  <p>Each font has to be retrieved from the Google cloud server. Once you choose a font the codebox will provide you with the link you need to paste into the head section of your HTML.</p>
+
+
+ <!-- CODEBOX 1 : FONT RETRIEVAL LINK -->
+  <h4>Codebox 1 : Font retrieval link</h4>
+  <p>Copy the link below and add it to the head section of your HTML.</p>
+  <div class="gold-block">
+    <code id="static-code-1"></code>
+    <button class="gold-btn" id="copy-btn-1" onclick="copyStatic('static-code-1','copy-btn-1')">📋 Copy</button>
+  </div>
+  <!-- END CODEBOX 1 -->
+
+</div>
+<!-- END STEP 3 -->
+
+
+<!-- ============================================================
+     STEP 4 : SELECT FONT SIZE
+     Contains: size dropdown, font size preview
+     ============================================================ -->
+<div class="card">
+
+  <h4>Select Font Size :</h4>
+
+  <!-- FONT SIZE CONTROL -->
+  <div class="gold-block">
+
 
   <!-- FONT SIZE PREVIEW -->
   <div id="font-size-preview" class="font-preview-text"></div>
