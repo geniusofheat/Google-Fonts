@@ -328,6 +328,9 @@ function renderFontList(category) {
 
     fonts.sort(function(a, b) { return a.family.localeCompare(b.family); });
     filteredFonts = filteredFonts.concat(fonts);
+    filteredFonts.sort(function(a, b) {
+  return a.family.localeCompare(b.family);
+});
   });
 
   // Update info badges
