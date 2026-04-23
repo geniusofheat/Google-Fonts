@@ -64,8 +64,8 @@ function getWeightNumber(variant) {
 
 // ── PAGE SECTION 1 : UPDATE ALL PREVIEW BOXES ────────────────
 function updateAllPreviews() {
-  const previewText = document.getElementById('font-preview-text').value.trim()
-    || (selectedFont ? selectedFont.family : 'Preview');
+  const previewText = document.getElementById('font-preview-input').value.trim()
+  || (selectedFont ? selectedFont.family : 'Preview');
 
   const size     = document.getElementById('font-size-control').value + 'px';
   const weight   = document.getElementById('font-weight-control').value;
@@ -130,7 +130,7 @@ function showSuggestions(query) {
   if (!cleaned) { hideSuggestions(); return; }
 
   const matches = allFonts
-    .filter(function(f) { return  })
+    .filter(function(f) { return f.family.toLowerCase().includes(cleaned); })
     .slice(0, 8);
 
   if (matches.length === 0) { hideSuggestions(); return; }
@@ -244,7 +244,7 @@ function renderPageNav() {
 // ── PAGE SECTION 5 : RENDER FONT PAGE ────────────────────────
 // Shows 5 fonts for the current page as a numbered ordered list
 function renderFontPage() {
-  const list = document.getElementById('font-list');
+  const list = document.getElementById('font-family-list');
   if (!list) return;
   list.innerHTML = '';
 
@@ -268,13 +268,13 @@ function renderFontPage() {
     loadFontFace(safeName, font.menu);
 
     const li = document.createElement('li');
-    li.className       = 'font-list-item';
+    li.className       = 'font-family-list-item';
     li.textContent     = font.family;
     li.style.fontFamily = '"' + safeName + '", serif';
 
     li.addEventListener('click', function() {
       // Mark active
-      ol.querySelectorAll('.font-list-item').forEach(function(item) {
+      ol.querySelectorAll('.font-family-list-item').forEach(function(item) {
         item.classList.remove('active');
       });
       li.classList.add('active');
@@ -334,9 +334,9 @@ function renderFontList(category) {
   });
 
   // Update info badges
-  const catEl     = document.getElementById('font-list-category');
-  const totalEl   = document.getElementById('font-list-total');
-  const showingEl = document.getElementById('font-list-showing');
+  const catEl     = document.getElementById('font-family-list-category');
+  const totalEl   = document.getElementById('font-family-list-total');
+  const showingEl = document.getElementById('font-family-list-showing');
 
   if (catEl)     catEl.textContent     = 'Category: ' + (currentCategory === 'all' ? 'All' : currentCategory);
   if (totalEl)   totalEl.textContent   = 'Total: ' + filteredFonts.length;
@@ -443,12 +443,11 @@ document.getElementById('variants').addEventListener('click', function(e) {
 // INPUT FIELD → LOCAL PREVIEW + OPTIONAL GLOBAL UPDATE
 document.getElementById('font-preview-input').addEventListener('input', function () {
 
-  const preview = document.getElementById('font-preview');
+  const preview = document.getElementById('font-preview-output');
 
-  const value = this.value.trim();
+const value = this.value.trim();
 
-  // local preview update (always safe)
-  preview.textContent = value || 'Your text will appear here';
+preview.textContent = value || 'Your text will appear here';
 
   // optional: keep global system in sync (DO NOT REMOVE)
   updateAllPreviews();
@@ -468,7 +467,7 @@ async function loadFonts() {
     allFonts   = data.items;
     renderFontList('serif');
   } catch (err) {
-    const list = document.getElementById('font-list');
+    const list = document.getElementById('font-family-options');
     if (list) {
       list.innerHTML = '';
       const errMsg = document.createElement('p');
