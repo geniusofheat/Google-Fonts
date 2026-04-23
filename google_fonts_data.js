@@ -130,7 +130,7 @@ function showSuggestions(query) {
   if (!cleaned) { hideSuggestions(); return; }
 
   const matches = allFonts
-    .filter(function(f) { return f.family.toLowerCase().includes(cleaned); })
+    .filter(function(f) { return  })
     .slice(0, 8);
 
   if (matches.length === 0) { hideSuggestions(); return; }
@@ -322,7 +322,7 @@ function renderFontList(category) {
     if (currentSearch) {
       const cleaned = cleanQuery(currentSearch);
       fonts = fonts.filter(function(f) {
-        return f.family.toLowerCase().includes(cleaned);
+	  return f.family.toLowerCase().startsWith(cleaned);
       });
     }
 
