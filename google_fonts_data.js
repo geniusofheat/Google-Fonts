@@ -74,7 +74,7 @@ function updateAllPreviews() {
   const fontFamily = selectedFont ? '"' + selectedFont.family + '", serif' : 'inherit';
 
   const previews = [
-    document.getElementById('font-family-preview'),
+    document.getElementById('font-preview-output'),
     document.getElementById('font-size-preview'),
     document.getElementById('font-weight-preview'),
     document.getElementById('font-color-preview')
@@ -334,8 +334,8 @@ function renderFontList(category) {
   });
 
   // Update info badges
-  const catEl     = document.getElementById('font-family-list-category');
-  const totalEl   = document.getElementById('font-family-list-total');
+  const catEl     = null;
+  const totalEl   = document.getElementById('font-list-total');
   const showingEl = document.getElementById('font-family-list-showing');
 
   if (catEl)     catEl.textContent     = 'Category: ' + (currentCategory === 'all' ? 'All' : currentCategory);
