@@ -372,9 +372,9 @@ code {
   border: 1px dashed var(--gold-border);
   border-radius: 10px;
   font-size: 20px;
-  color: #ffffff;
+  color: gold;
   word-break: break-word;
-  background: rgba(0,0,0,0.3);
+  background: transparent;
 }
 
 /* ================================================================
