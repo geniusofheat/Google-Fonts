@@ -438,11 +438,24 @@ document.getElementById('variants').addEventListener('click', function(e) {
 // ── END PAGE SECTION 10 : CONTROLS ───────────────────────────
 
 
-// ── PAGE SECTION 11 : FONT PREVIEW TEXT INPUT ─────────────────
-document.getElementById('font-preview-text').addEventListener('input', function() {
+// ── PAGE SECTION 11 : FONT PREVIEW INPUT HANDLER ───────────────
+
+// INPUT FIELD → LOCAL PREVIEW + OPTIONAL GLOBAL UPDATE
+document.getElementById('font-preview-input').addEventListener('input', function () {
+
+  const preview = document.getElementById('font-preview');
+
+  const value = this.value.trim();
+
+  // local preview update (always safe)
+  preview.textContent = value || 'Your text will appear here';
+
+  // optional: keep global system in sync (DO NOT REMOVE)
   updateAllPreviews();
+
 });
-// ── END PAGE SECTION 11 : FONT PREVIEW TEXT INPUT ────────────
+
+// ── END PAGE SECTION 11 : FONT PREVIEW INPUT HANDLER ───────────
 
 
 // ── PAGE SECTION 12 : LOAD FONTS FROM API ────────────────────
