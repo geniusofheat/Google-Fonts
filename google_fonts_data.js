@@ -173,25 +173,68 @@ function renderPageNav() {
   if (!nav) return;
   nav.innerHTML = '';
 
-  const totalPages = Math.ceil(filteredFonts.length / PAGE_SIZE);
-  if (totalPages <= 1) return;
+  const total = filteredFonts.length;
+  if (total <= PAGE_SIZE) return;
 
-  for (var i = 0; i < totalPages; i++) {
-    var start = i * PAGE_SIZE + 1;
-    var end   = Math.min((i + 1) * PAGE_SIZE, filteredFonts.length);
-    var btn   = document.createElement('button');
-    btn.className    = i === currentPage ? 'gold-btn-active' : 'gold-btn';
-    btn.textContent  = start + '–' + end;
-    btn.dataset.page = i;
+  const windowStart = Math.floor(currentPage / 4) * 4; 
+  // groups pages into chunks of 4 (0–3, 4–7, etc.)
 
-    btn.addEventListener('click', function(e) {
-      currentPage = parseInt(e.target.dataset.page);
+  const isFirstWindow = windowStart === 0;
+
+  // ── BACK BUTTON (only after first Next) ──
+  if (!isFirstWindow) {
+    const backBtn = document.createElement('button');
+    backBtn.className = 'gold-btn';
+    backBtn.textContent = 'Back';
+
+    backBtn.onclick = function() {
+      currentPage = (windowStart - 4);
+      renderPageNav();
       renderFontPage();
-      nav.querySelectorAll('button').forEach(function(b) { b.className = 'gold-btn'; });
-      e.target.className = 'gold-btn-active';
-    });
+    };
+
+    nav.appendChild(backBtn);
+  }
+
+  // ── RANGE BUTTONS ──
+  const visibleCount = isFirstWindow ? 4 : 3;
+
+  for (let i = 0; i < visibleCount; i++) {
+    const pageIndex = windowStart + i;
+    const start = pageIndex * PAGE_SIZE + 1;
+
+    if (start > total) break;
+
+    const end = Math.min((pageIndex + 1) * PAGE_SIZE, total);
+
+    const btn = document.createElement('button');
+    btn.className = pageIndex === currentPage ? 'gold-btn-active' : 'gold-btn';
+    btn.textContent = start + '–' + end;
+
+    btn.onclick = function() {
+      currentPage = pageIndex;
+      renderPageNav();
+      renderFontPage();
+    };
 
     nav.appendChild(btn);
+  }
+
+  // ── NEXT BUTTON ──
+  const nextExists = (windowStart + 4) * PAGE_SIZE < total;
+
+  if (nextExists) {
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'gold-btn';
+    nextBtn.textContent = 'Next';
+
+    nextBtn.onclick = function() {
+      currentPage = windowStart + 4;
+      renderPageNav();
+      renderFontPage();
+    };
+
+    nav.appendChild(nextBtn);
   }
 }
 // ── END PAGE SECTION 4 : RENDER PAGE NAV ROW ─────────────────
