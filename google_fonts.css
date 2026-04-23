@@ -149,8 +149,10 @@ hr {
   transition: background 0.2s;
 }
 
-.gold-btn-42 {
+.gold-btn-24 {
   flex-shrink: 0;
+  width: 24px;
+  height: 24px;
   border: 1px solid var(--gold);
   border-radius: 6px;
   padding: 2px 2px;
@@ -163,7 +165,7 @@ hr {
   transition: background 0.2s;
 }
 
-.gold-btn-24 {
+.gold-btn-42 {
   width: 24px;
   height: 24px;
   border: 1px solid var(--gold);
