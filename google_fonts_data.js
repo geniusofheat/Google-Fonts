@@ -168,6 +168,7 @@ function hideSuggestions() {
 
 // ── PAGE SECTION 4 : RENDER PAGE NAV ROW ─────────────────────
 // Builds [ 1–5 ] [ 6–10 ] [ 11–15 ] buttons above font list
+
 function renderPageNav() {
   const nav = document.getElementById('font-page-nav');
   if (!nav) return;
@@ -176,19 +177,21 @@ function renderPageNav() {
   const total = filteredFonts.length;
   if (total <= PAGE_SIZE) return;
 
-  const windowStart = Math.floor(currentPage / 4) * 4; 
-  // groups pages into chunks of 4 (0–3, 4–7, etc.)
+  const totalPages = Math.ceil(total / PAGE_SIZE);
 
-  const isFirstWindow = windowStart === 0;
+  // Sliding window based on current page
+  const windowStart = Math.max(0, currentPage - 1);
 
-  // ── BACK BUTTON (only after first Next) ──
-  if (!isFirstWindow) {
+  const isFirst = currentPage === 0;
+
+  // ── BACK BUTTON ──
+  if (!isFirst) {
     const backBtn = document.createElement('button');
     backBtn.className = 'gold-btn';
     backBtn.textContent = 'Back';
 
     backBtn.onclick = function() {
-      currentPage = (windowStart - 4);
+      currentPage -= 1;
       renderPageNav();
       renderFontPage();
     };
@@ -197,14 +200,14 @@ function renderPageNav() {
   }
 
   // ── RANGE BUTTONS ──
-  const visibleCount = isFirstWindow ? 4 : 3;
+  const visibleCount = isFirst ? 4 : 3;
 
   for (let i = 0; i < visibleCount; i++) {
     const pageIndex = windowStart + i;
+
+    if (pageIndex >= totalPages) break;
+
     const start = pageIndex * PAGE_SIZE + 1;
-
-    if (start > total) break;
-
     const end = Math.min((pageIndex + 1) * PAGE_SIZE, total);
 
     const btn = document.createElement('button');
@@ -221,15 +224,13 @@ function renderPageNav() {
   }
 
   // ── NEXT BUTTON ──
-  const nextExists = (windowStart + 4) * PAGE_SIZE < total;
-
-  if (nextExists) {
+  if (currentPage < totalPages - 1) {
     const nextBtn = document.createElement('button');
     nextBtn.className = 'gold-btn';
     nextBtn.textContent = 'Next';
 
     nextBtn.onclick = function() {
-      currentPage = windowStart + 4;
+      currentPage += 1;
       renderPageNav();
       renderFontPage();
     };
