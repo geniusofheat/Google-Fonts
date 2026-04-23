@@ -5,13 +5,17 @@ const API_KEY = 'AIzaSyC941rSK-K3iehOd2osiSv7PPQV6MYl0Ac';
 
 // ── CORE STATE ───────────────────────────────────────────────
 const CATEGORIES = ['serif', 'sans-serif', 'monospace', 'display', 'handwriting'];
-let allFonts      = [];
+let allFonts        = [];
 let currentCategory = 'all';
 let currentSearch   = '';
 let selectedFont    = null;
 let filteredFonts   = [];
 let currentPage     = 0;
 const PAGE_SIZE     = 5;
+
+// Size and weight stored in state since dropdowns are removed
+let currentSize   = 20;
+let currentWeight = 400;
 // ── END CORE STATE ───────────────────────────────────────────
 
 
@@ -64,19 +68,17 @@ function getWeightNumber(variant) {
 
 // ── PAGE SECTION 1 : UPDATE ALL PREVIEW BOXES ────────────────
 function updateAllPreviews() {
-  const previewText = document.getElementById('font-preview-input').value.trim()
-  || (selectedFont ? selectedFont.family : 'Preview');
+  const previewInput = document.getElementById('font-preview-input');
+  const previewText  = (previewInput && previewInput.value.trim())
+    ? previewInput.value.trim()
+    : (selectedFont ? selectedFont.family : 'Preview');
 
-  const size     = document.getElementById('font-size-control').value + 'px';
-  const weight   = document.getElementById('font-weight-control').value;
-  const color    = document.getElementById('color-picker').value;
-  const isItalic = document.getElementById('italic-toggle').classList.contains('active');
+  const color      = document.getElementById('color-picker').value;
+  const isItalic   = document.getElementById('italic-toggle').classList.contains('active');
   const fontFamily = selectedFont ? '"' + selectedFont.family + '", serif' : 'inherit';
 
   const previews = [
     document.getElementById('font-preview-output'),
-    document.getElementById('font-size-preview'),
-    document.getElementById('font-weight-preview'),
     document.getElementById('font-color-preview')
   ];
 
@@ -84,8 +86,8 @@ function updateAllPreviews() {
     if (!el) return;
     el.textContent      = previewText;
     el.style.fontFamily = fontFamily;
-    el.style.fontSize   = size;
-    el.style.fontWeight = weight;
+    el.style.fontSize   = currentSize + 'px';
+    el.style.fontWeight = currentWeight;
     el.style.fontStyle  = isItalic ? 'italic' : 'normal';
     el.style.color      = color;
   });
@@ -99,18 +101,16 @@ function updateAllPreviews() {
 function syncCodeBoxes() {
   if (!selectedFont) return;
 
-  const weight   = document.getElementById('font-weight-control').value;
-  const size     = document.getElementById('font-size-control').value;
   const color    = document.getElementById('color-picker').value;
   const isItalic = document.getElementById('italic-toggle').classList.contains('active');
 
   const linkCode = '<link href="https://fonts.googleapis.com/css2?family=' +
     selectedFont.family.replace(/\s+/g, '+') +
-    ':wght@' + weight + '&display=swap" rel="stylesheet">';
+    ':wght@' + currentWeight + '&display=swap" rel="stylesheet">';
 
   const cssCode = "font-family: '" + selectedFont.family + "', " + selectedFont.category + ';\n' +
-                  'font-size: '    + size   + 'px;\n' +
-                  'font-weight: '  + weight + ';\n' +
+                  'font-size: '    + currentSize   + 'px;\n' +
+                  'font-weight: '  + currentWeight + ';\n' +
                   'font-style: '   + (isItalic ? 'italic' : 'normal') + ';\n' +
                   'color: '        + color  + ';';
 
@@ -167,8 +167,6 @@ function hideSuggestions() {
 
 
 // ── PAGE SECTION 4 : RENDER PAGE NAV ROW ─────────────────────
-// Builds [ 1–5 ] [ 6–10 ] [ 11–15 ] buttons above font list
-
 function renderPageNav() {
   const nav = document.getElementById('font-page-nav');
   if (!nav) return;
@@ -177,64 +175,54 @@ function renderPageNav() {
   const total = filteredFonts.length;
   if (total <= PAGE_SIZE) return;
 
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-
-  // Sliding window based on current page
+  const totalPages  = Math.ceil(total / PAGE_SIZE);
   const windowStart = Math.max(0, currentPage - 1);
+  const isFirst     = currentPage === 0;
 
-  const isFirst = currentPage === 0;
-
-  // ── BACK BUTTON ──
   if (!isFirst) {
     const backBtn = document.createElement('button');
-    backBtn.className = 'gold-btn';
+    backBtn.className   = 'gold-btn';
     backBtn.textContent = 'Back';
-
     backBtn.onclick = function() {
       currentPage -= 1;
       renderPageNav();
       renderFontPage();
     };
-
     nav.appendChild(backBtn);
   }
 
-  // ── RANGE BUTTONS ──
   const visibleCount = isFirst ? 4 : 3;
-
-  for (let i = 0; i < visibleCount; i++) {
-    const pageIndex = windowStart + i;
-
+  for (var i = 0; i < visibleCount; i++) {
+    var pageIndex = windowStart + i;
     if (pageIndex >= totalPages) break;
 
-    const start = pageIndex * PAGE_SIZE + 1;
-    const end = Math.min((pageIndex + 1) * PAGE_SIZE, total);
+    var start = pageIndex * PAGE_SIZE + 1;
+    var end   = Math.min((pageIndex + 1) * PAGE_SIZE, total);
 
-    const btn = document.createElement('button');
-    btn.className = pageIndex === currentPage ? 'gold-btn-active' : 'gold-btn';
-    btn.textContent = start + '–' + end;
+    var btn = document.createElement('button');
+    btn.className    = pageIndex === currentPage ? 'gold-btn-active' : 'gold-btn';
+    btn.textContent  = start + '–' + end;
 
-    btn.onclick = function() {
-      currentPage = pageIndex;
-      renderPageNav();
-      renderFontPage();
-    };
+    (function(pi) {
+      btn.onclick = function() {
+        currentPage = pi;
+        renderPageNav();
+        renderFontPage();
+      };
+    })(pageIndex);
 
     nav.appendChild(btn);
   }
 
-  // ── NEXT BUTTON ──
   if (currentPage < totalPages - 1) {
     const nextBtn = document.createElement('button');
-    nextBtn.className = 'gold-btn';
+    nextBtn.className   = 'gold-btn';
     nextBtn.textContent = 'Next';
-
     nextBtn.onclick = function() {
       currentPage += 1;
       renderPageNav();
       renderFontPage();
     };
-
     nav.appendChild(nextBtn);
   }
 }
@@ -242,7 +230,6 @@ function renderPageNav() {
 
 
 // ── PAGE SECTION 5 : RENDER FONT PAGE ────────────────────────
-// Shows 5 fonts for the current page as a numbered ordered list
 function renderFontPage() {
   const list = document.getElementById('font-family-list');
   if (!list) return;
@@ -268,28 +255,21 @@ function renderFontPage() {
     loadFontFace(safeName, font.menu);
 
     const li = document.createElement('li');
-    li.className       = 'font-list-item';
-    li.textContent     = font.family;
+    li.className        = 'font-list-item';
+    li.textContent      = font.family;
     li.style.fontFamily = '"' + safeName + '", serif';
 
     li.addEventListener('click', function() {
-      // Mark active
       ol.querySelectorAll('.font-list-item').forEach(function(item) {
         item.classList.remove('active');
       });
       li.classList.add('active');
 
-      // Set selected font
       selectedFont = font;
 
-      // Load first variant
       const firstVariant = Object.keys(font.files)[0];
       const firstSafe    = font.family.replace(/\s+/g, '_') + '_' + firstVariant;
       loadFontFace(firstSafe, font.files[firstVariant]);
-
-      // Update weight dropdown
-      const weightEl = document.getElementById('font-weight-control');
-      if (weightEl) weightEl.value = getWeightNumber(firstVariant);
 
       updateAllPreviews();
     });
@@ -303,7 +283,6 @@ function renderFontPage() {
 
 
 // ── PAGE SECTION 6 : RENDER FONT LIST ────────────────────────
-// Filters fonts, updates info badges, builds page nav, shows page 1
 function renderFontList(category) {
   if (category !== undefined) {
     currentCategory = category;
@@ -322,23 +301,19 @@ function renderFontList(category) {
     if (currentSearch) {
       const cleaned = cleanQuery(currentSearch);
       fonts = fonts.filter(function(f) {
-	  return f.family.toLowerCase().startsWith(cleaned);
+        return f.family.toLowerCase().startsWith(cleaned);
       });
     }
 
     fonts.sort(function(a, b) { return a.family.localeCompare(b.family); });
     filteredFonts = filteredFonts.concat(fonts);
-    filteredFonts.sort(function(a, b) {
-  return a.family.localeCompare(b.family);
-});
   });
 
-  // Update info badges
-  const catEl     = null;
+  filteredFonts.sort(function(a, b) { return a.family.localeCompare(b.family); });
+
   const totalEl   = document.getElementById('font-list-total');
   const showingEl = document.getElementById('font-list-showing');
 
-  if (catEl)     catEl.textContent     = 'Category: ' + (currentCategory === 'all' ? 'All' : currentCategory);
   if (totalEl)   totalEl.textContent   = 'Total: ' + filteredFonts.length;
   if (showingEl) showingEl.textContent = 'Showing: 1–' + Math.min(PAGE_SIZE, filteredFonts.length);
 
@@ -409,15 +384,7 @@ document.getElementById('search-btn').addEventListener('click', function() {
 // ── END PAGE SECTION 9 : SEARCH BAR LISTENERS ────────────────
 
 
-// ── PAGE SECTION 10 : CONTROLS — SIZE, WEIGHT, COLOR, ITALIC ─
-document.getElementById('font-size-control').addEventListener('change', function() {
-  updateAllPreviews();
-});
-
-document.getElementById('font-weight-control').addEventListener('change', function() {
-  updateAllPreviews();
-});
-
+// ── PAGE SECTION 10 : COLOR AND ITALIC CONTROLS ──────────────
 document.getElementById('color-picker').addEventListener('input', function() {
   updateAllPreviews();
 });
@@ -426,53 +393,35 @@ document.getElementById('italic-toggle').addEventListener('click', function() {
   this.classList.toggle('active');
   updateAllPreviews();
 });
-
-document.getElementById('variants').addEventListener('click', function(e) {
-  if (!e.target.matches('.gold-btn') && !e.target.matches('.gold-btn-active')) return;
-  document.querySelectorAll('#variants button').forEach(function(b) { b.className = 'gold-btn'; });
-  e.target.className = 'gold-btn-active';
-  const weightEl = document.getElementById('font-weight-control');
-  if (weightEl) weightEl.value = e.target.dataset.weight;
-  updateAllPreviews();
-});
-// ── END PAGE SECTION 10 : CONTROLS ───────────────────────────
+// ── END PAGE SECTION 10 : COLOR AND ITALIC CONTROLS ──────────
 
 
-// ── PAGE SECTION 11 : FONT PREVIEW INPUT HANDLER ───────────────
-
-// INPUT FIELD → LOCAL PREVIEW + OPTIONAL GLOBAL UPDATE
-document.getElementById('font-preview-input').addEventListener('input', function () {
-
+// ── PAGE SECTION 11 : FONT PREVIEW INPUT ─────────────────────
+document.getElementById('font-preview-input').addEventListener('input', function() {
   const preview = document.getElementById('font-preview-output');
-
-const value = this.value.trim();
-
-preview.textContent = value || 'Your text will appear here';
-
-  // optional: keep global system in sync (DO NOT REMOVE)
+  const value   = this.value.trim();
+  if (preview) preview.textContent = value || 'Your text will appear here';
   updateAllPreviews();
-
 });
+// ── END PAGE SECTION 11 : FONT PREVIEW INPUT ─────────────────
 
-// ── END PAGE SECTION 11 : FONT PREVIEW INPUT HANDLER ───────────
 
 // ── PAGE SECTION 12 : VERTICAL SLIDERS ───────────────────────
 document.getElementById('font-size-slider').addEventListener('input', function() {
-  const val = this.value;
-  document.getElementById('font-size-label').textContent = 'Size: ' + val + 'px';
-  document.getElementById('font-size-control').value = val;
+  currentSize = parseInt(this.value);
+  document.getElementById('font-size-label').textContent = 'Size: ' + currentSize + 'px';
   updateAllPreviews();
 });
 
 document.getElementById('font-weight-slider').addEventListener('input', function() {
-  const val = this.value;
-  document.getElementById('font-weight-label').textContent = 'Weight: ' + val;
-  document.getElementById('font-weight-control').value = val;
+  currentWeight = parseInt(this.value);
+  document.getElementById('font-weight-label').textContent = 'Weight: ' + currentWeight;
   updateAllPreviews();
 });
 // ── END PAGE SECTION 12 : VERTICAL SLIDERS ───────────────────
 
-// ── PAGE SECTION 13: LOAD FONTS FROM API ────────────────────
+
+// ── PAGE SECTION 13 : LOAD FONTS FROM API ────────────────────
 async function loadFonts() {
   try {
     const url  = 'https://www.googleapis.com/webfonts/v1/webfonts?key=' + API_KEY + '&sort=popularity';
@@ -480,7 +429,7 @@ async function loadFonts() {
     if (!res.ok) throw new Error('API error ' + res.status);
     const data = await res.json();
     allFonts   = data.items;
-    renderFontList('serif');
+    renderFontList('all');
   } catch (err) {
     const list = document.getElementById('font-family-list');
     if (list) {
@@ -492,8 +441,6 @@ async function loadFonts() {
     console.error(err);
   }
 }
-
-
 
 loadFonts();
 // ── END PAGE SECTION 13 : LOAD FONTS FROM API ────────────────
