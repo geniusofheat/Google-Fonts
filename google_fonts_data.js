@@ -482,7 +482,7 @@ async function loadFonts() {
     allFonts   = data.items;
     renderFontList('serif');
   } catch (err) {
-    const list = document.getElementById('font-family-options');
+    const list = document.getElementById('font-family-list');
     if (list) {
       list.innerHTML = '';
       const errMsg = document.createElement('p');
