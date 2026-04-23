@@ -270,6 +270,8 @@ function renderFontPage() {
       const firstVariant = Object.keys(font.files)[0];
       const firstSafe    = font.family.replace(/\s+/g, '_') + '_' + firstVariant;
       loadFontFace(firstSafe, font.files[firstVariant]);
+      const output = document.getElementById('font-preview-output');
+      if (output) output.style.fontFamily = '"' + firstSafe + '", serif';
 
       updateAllPreviews();
     });
