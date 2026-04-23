@@ -116,7 +116,7 @@
 
   <!-- SIZE AND WEIGHT SLIDERS -->
   <div class="gold-block">
-    <div class="slider-row">
+    
 
       <div class="slider-col">
         <input type="range" id="font-size-slider"
@@ -134,9 +134,15 @@
         <label for="font-weight-slider" id="font-weight-label">Weight: 400</label>
       </div>
 
-    </div>
-  </div>
-  <!-- END SLIDERS -->
+<!-- ITALIC TOGGLE -->
+<div class="gold-block">
+    <label>Italic :</label>
+    <button id="italic-toggle" class="gold-btn">I — Italic</button>
+</div>
+<!-- END ITALIC TOGGLE -->
+    
+</div>
+<!-- END SLIDERS -->
 
 </div>
 <!-- END STEP 2 -->
@@ -171,18 +177,13 @@
   <h4>Step 4 : Select Font Color</h4>
 
   <!-- COLOR PICKER -->
-  <div class="gold-block">
+<div class="gold-block">
     <label for="color-picker">Color :</label>
     <input type="color" id="color-picker">
-  </div>
+</div>
   <!-- END COLOR PICKER -->
 
-  <!-- ITALIC TOGGLE -->
-  <div class="gold-block">
-    <label>Style :</label>
-    <button id="italic-toggle" class="gold-btn">I — Italic</button>
-  </div>
-  <!-- END ITALIC TOGGLE -->
+
 
   <!-- FONT COLOR PREVIEW -->
   <div id="font-color-preview" class="font-preview-text"></div>
