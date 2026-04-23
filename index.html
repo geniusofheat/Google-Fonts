@@ -76,26 +76,28 @@
 
 <!-- END STEP 1 -->
 
-
-<!-- ============================================================
-     STEP 2 : SELECT A FONT FAMILY
-     ============================================================ -->
-
-  <h4>Step 2 : Preview Text</h4>
-  <p>Type some text you want to see written in google fonts.</p>
-
-  <!-- INFO BADGES -->
+<!-- INFO BADGES -->
   <div id="font-list-card" class="nav-row">
     <span class="gold-btn" id="font-list-total">Total: 0</span>
     <span class="gold-btn" id="font-list-showing">Showing: A–Z</span>
   </div>
-  <!-- END INFO BADGES -->
+<!-- END INFO BADGES -->
 
-  <!-- NUMERICAL NAV BUTTONS — JS fills this based on the number of fonts available -->
-<div id="font-page-nav" class="nav-row">
-</div>
-  <!-- END PAGE NAV BUTTONS -->
+<!-- ============================================================
+     STEP 2 : PREVIEW TEXT INPUT
+     ============================================================ -->
+<!-- PREVIEW INPUT -->
+<div class="gold-block">
 
+  <h4>Step 2 : Preview Text Input</h4>
+  <p>Type some text you want to see written in google fonts.</p>
+  
+  <input class="search-input"
+      id="font-preview-input"
+      type="text"
+      placeholder="Type something here..."
+      autocomplete="off">
+      
 <!-- FONT PREVIEW OUTPUT -->
 <div id="font-preview-output" class="card">
     Your text will appear here
@@ -107,20 +109,15 @@
 	<h4>Step 3 : Select A Font Family</h4>
 	<p>Click on a font family from the list. The font will be projected onto the text thats in the preview window.</p>
 	
-  <!-- FONT FAMILY LIST — JS API LIST -->
+<!-- NUMERICAL NAV BUTTONS — JS fills this based on the number of fonts available -->
+<div id="font-page-nav" class="nav-row">
+</div>
+<!-- END PAGE NAV BUTTONS -->
+	
+<!-- FONT FAMILY LIST — JS API LIST -->
 <div id="font-family-list">
 </div>
-  <!-- END FONT FAMILY LIST -->
-</div>
-
-<!-- FONT PREVIEW INPUT -->
-<div class="gold-block">
-
-    <input class="search-input"
-      id="font-preview-input"
-      type="text"
-      placeholder="Type something here..."
-      autocomplete="off">
+<!-- END FONT FAMILY LIST -->
 </div>
 
 <!-- ========================================
