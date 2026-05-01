@@ -61,8 +61,13 @@
 
 <!-- ============================================================
      STEP 1 : SELECT A FONT TYPE
-     ============================================================ -->
-<p>Choose a Font Type from the list below. The first 5 font Families that are available will appear in the list. When you select a font family, it will appear in the display window and you can change its style with the toolbars.</p>
+   ============================================================ -->
+<!-- STEP 1 - CARD -->
+<div class="card">
+		
+	<h4>Step 1: Select A Font Type !</h4>
+	
+	<p>Choose a Font Type from the NAV BUTTONS below. The first 5 font Families will appear in the list. Scroll through the numerical NAV BUTTONS to view the rest of the font families. 
 
 <!-- FONT-TYPE--NAV BUTTONS -->
 <div class="nav-row" id="font-family-options">
@@ -74,140 +79,145 @@
     <button class="gold-btn" data-cat="handwriting">Handwriting</button>
 </div>
 <!-- END FONT-TYPE--NAV BUTTONS -->
-	
+</div>
+<!-- END STEP 1 - CARD -->
+<!-- ========================================
+	 END STEP 1 : SELECT A FONT TYPE
+=================================== -->
 <!-- ============================================================
      STEP 2 : SELECT A FONT FAMILY
-     ============================================================ -->
-<h4>Step 2 : Select A Font Family</h4>
+   ============================================================ -->
+<!-- STEP 2 - CARD -->
+<div class="card">
 	
-  
-  
-  	<h4>Step 3 : Select A Font </h4>
+	<h4>Step 2 : Select A Font Family !</h4>
+
+ <p>The first 5 font families of the 
+	 font type you chose are presented in 
+	 the list below. Use the numerical NAV
+	BUTTONS to scroll through the list 5
+	 font-families at a time.</p>
+	 <p>When you click a font family it will
+	 appear in the preview window. Use the 
+	 toolbars to change the styles.
+	 The styles you set are created in
+	 a two different codeboxes in Step 3 & 4.
+	 Step 3 is your style rules and step 4 is
+	 the header link you need to paste in your 
+	 header to retrieve the fonts from google 
+	 fonts cloud server.You can copy the CSS 
+	 style rules from the codebox in Step 3
+	 and paste them it into your stylesheet.
+.</p>
 	
-<!-- END PAGE NAV BUTTONS -->
-
-<!-- NUMERICAL NAV BUTTONS — JS fills this based on the number of fonts available -->
-<div id="font-page-nav" class="nav-row">
-</div>
-<!-- END PAGE NAV BUTTONS -->
-
 <!-- INFO BADGES -->
   <div id="font-list-card" class="nav-row">
     <span class="gold-btn" id="font-list-total">Total: 0</span>
     <span class="gold-btn" id="font-list-showing">Showing: A–Z</span>
   </div>
 <!-- END INFO BADGES -->
-	
+		
+<!-- NUMERICAL NAV BUTTONS — JS fills this
+	based on the number of fonts available -->
+<div id="font-page-nav" class="nav-row">
+</div>
+<!-- END NUMERICAL NAV BUTTONS -->
+
+<!-- FONT FAMILY LIST - 5 AT A TIME - JS API LIST -->
+<div id="font-family-list">
+</div>
+<!-- END FONT FAMILY LIST -->
+</div>
+<!--END STEP 2 - CARD -->
 <!-- ========================================
-	 STEP 3 : CHANGE FONT FACE
+	 END STEP 2 : SELECT A FONT FAMILY
 =================================== -->
-<!-- PREVIEW WINDOW CARD -->
+<!-- ========================================
+	 STEP 3 : CHANGE FONT STYLES
+=================================== -->
+<!-- CHANGE FONT STYLES CARD -->
 <div class="card">
 
+<h4>Step 3 : Change Font Styles !</h4>
+	
 <!-- ITALICIZE AND COLOR PICKER-GOLD BLOCK -->
 <div class="gold-block" style="border-width: 0px;">
-<!-- ITALICIZE-BUTTON-->
-	<label>Italic :</label>
+
+<!-- PREVIEW WINDOW -->
+<div class="gold-block">
+  <input class="search-input"
+      id="font-preview-input"
+      type="text"
+      placeholder="PREVIEW TEXT APPEARS HERE !"
+      autocomplete="off">
+</div>
+<!-- END PREVIEW WINDOW -->
+	
+<!-- ITALICIZE-BUTTON -->
     <button id="italic-toggle" class="gold-btn-44">I</button>
-<!-- ITALICIZE-BUTTON-->
-<!-- COLOR PICKER-BUTTON-->
-    <label for="color-picker">Font Color :</label>
+<!-- ITALICIZE-BUTTON -->
+<!-- COLOR PICKER-BUTTON -->
     <input type="color" id="color-picker" class="gold-btn-44">
-!-- COLOR PICKER-BUTTON-->
+!-- COLOR PICKER-BUTTON -->
 </div>
 <!-- ITALICIZE AND COLOR PICKER-GOLD BLOCK -->
 	
-<!-- FONT PREVIEW WINDOW-GOLD BLOCK-->
+<!-- FONT PREVIEW WINDOW-GOLD BLOCK -->
 <div id="font-preview-output" class="gold-block">
 Preview Window ... ...
 </div>
-<!-- END FONT PREVIEW WINDOW-GOLD BLOCK-->
+<!-- END FONT PREVIEW WINDOW-GOLD BLOCK -->
 
-<!-- FONT-SIZE SLIDER-GOLD BLOCK-->
+<!-- FONT-SIZE SLIDER-GOLD BLOCK -->
 <div class="gold-block">
     <label>Font-Size :</label>
     <input type="range" id="font-size-slider"
           min="10" max="72" value="20">
     <label for="font-size-slider" id="font-size-label">Size: 20px</label>
 </div>
-<!-- END FONT-SIZE SLIDER-GOLD BLOCK-->
+<!-- END FONT-SIZE SLIDER-GOLD BLOCK -->
 </div>
-<!-- END PREVIEW WINDOW CARD -->
-
-<!-- FONT FAMILY LIST — JS API LIST -->
-<div id="font-family-list">
-</div>
-<!-- END FONT FAMILY LIST -->
-
-<div class="gold-block">
-  <input class="search-input"
-      id="font-preview-input"
-      type="text"
-      placeholder="Type something here..."
-      autocomplete="off">
-</div>
-
-
-<!-- END FONT PREVIEW -->
-
-<!-- ≈========================================STYLE CHANGES ============================-->
-      
-<!-- FONT WEIGHT SLIDER -->
-<div class="gold-block">
-    <label>Font-Weight :</label>
-    <input type="range" id="font-weight-slider"
-          min="100" max="900" step="100" value="400">
-    <label for="font-weight-slider" id="font-weight-label">Weight : 400
-    </label>
-   
-</div>
-<!-- END FONT WEIGHT SLIDER -->
-</div>
-<!-- END ITALIC TOGGLE -->
-<!-- END STYLE CHANGES -->
-
-</div>
-<!-- END STEP 2 -->
-
+<!-- END CHANGE FONT STYLES CARD -->
+<!-- ========================================
+	 END STEP 3 : CHANGE FONT STYLES
+===========================================≈- ->
 <!-- ============================================================
-     STEP 3 : LINK TO GOOGLE FONTS
-     ============================================================ -->
+     STEP 4 : COPY HEADER LINK TO GOOGLE FONTS
+ ============================================================ -->
+<!--- COPY HEADER LINK CARD --->
 <div class="card">
 
-  <h4>Step 3 :</h4>
-  <h4>Codebox 1 : Link To Google Fonts</h4>
+  <h4>Step 4 : Link To Google Fonts !</h4>
   <p>Each font has to be retrieved from the Google cloud server. Once you choose a font the codebox will be updated with the link you need to paste into the head section of your html.</p>
 
-  <!-- CODEBOX 1 -->
-  <div class="gold-block">
+<!-- CODEBOX 1 - HEADER LINK CODE-->
+<div class="gold-block">
     <code id="static-code-1"></code>
     <button class="gold-btn" id="copy-btn-1" onclick="copyStatic('static-code-1','copy-btn-1')">📋 Copy</button>
-  </div>
-  <!-- END CODEBOX 1 -->
-
 </div>
-<!-- END STEP 3 -->
-
+<!-- END CODEBOX 1 - HEADER LINK CODE -->
+</div>
+<!-- END STEP - 4 -->
 
 <!-- ============================================================
-     STEP 4 : CSS OUTPUT
-     ============================================================ -->
+     <!-- STEP 4 - COPY CSS STYLE RULES -->
+ ============================================================ -->
+
+
 <div class="card">
 
   <h4>Step 4 :</h4>
   <h4>Codebox 2 : CSS Output</h4>
   <p>The codebox below is updated with the style rules you need to put into your stylesheet.</p>
 
-  <!-- CODEBOX 2 -->
-  <div class="gold-block">
+<!-- CODEBOX 2 -->
+<div class="gold-block">
     <code id="static-code-2"></code>
     <button class="gold-btn" id="copy-btn-2" onclick="copyStatic('static-code-2','copy-btn-2')">📋 Copy</button>
-  </div>
-  <!-- END CODEBOX 2 -->
-
 </div>
-<!-- END STEP 4 -->
-
+<!-- END CODEBOX 2 -->
+</div>
+<!-- END STEP 4 - COPY CSS STYLE RULES -->
 
 <script src="google_fonts_data.js"></script>
 <script>
