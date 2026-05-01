@@ -10,11 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Space+Mono&family=Lato:wght@400;700&family=Bree+Serif&display=swap" rel="stylesheet">
 </head>
 <body>
-
-
 <!-- ============================================================
-     SEARCH BAR — always visible at top
-     ============================================================ -->
+     NAV-BAR-CONTAINER
+============================================================ -->
+<div class="card">
+	
+<!--- SEARCH INPUT --->
 <div class="search-bar-container">
   <input type="text" id="font-search" class="search-input"
     placeholder="Search all fonts..."
@@ -22,15 +23,9 @@
   <button id="search-btn" class="gold-btn-42">🔍</button>
   <div id="search-dropdown"></div>
 </div>
-<!-- END SEARCH BAR -->
-
-
-<!-- ============================================================
-     STEP 1 : SELECT A FONT TYPE
-     ============================================================ -->
-<div class="card">
-
-  <!-- A–Z ROW -->
+<!-- END SEARCH INPUT -->
+	
+<!-- A–Z ROW -->
   <div id="az-row" class="nav-row">
     <span class="az-btn" data-letter="A">A</span><span class="az-dot">·</span>
     <span class="az-btn" data-letter="B">B</span><span class="az-dot">·</span>
@@ -59,32 +54,17 @@
     <span class="az-btn" data-letter="Y">Y</span><span class="az-dot">·</span>
     <span class="az-btn" data-letter="Z">Z</span>
   </div>
-  <!-- END A–Z ROW -->
-
-<!-- END STEP 1 -->
+<!-- END A–Z ROW -->
+<!-- ============================================================
+     END-NAV-BAR-CONTAINER
+============================================================ -->
 
 <!-- ============================================================
-     STEP 2 : PREVIEW TEXT INPUT
+     STEP 1 : SELECT A FONT TYPE
      ============================================================ -->
-<!-- PREVIEW INPUT -->
+<p>Choose a Font Type from the list below. The first 5 font Families that are available will appear in the list. When you select a font family, it will appear in the display window and you can change its style with the toolbars.</p>
 
-
-  <h4>Step 1 : Preview Text Input</h4>
-  <p>Type some text you want to see written in google fonts.</p>
-     
-
-
-<div class="gold-block">
-  <input class="search-input"
-      id="font-preview-input"
-      type="text"
-      placeholder="Type something here..."
-      autocomplete="off">
-</div>
-	
-	<h4>Step 2 : Select A Font Family</h4>
-	
-  <!-- NAV BUTTONS -->
+<!-- FONT-TYPE--NAV BUTTONS -->
 <div class="nav-row" id="font-family-options">
     <button class="gold-btn-active" data-cat="all">All</button>
     <button class="gold-btn" data-cat="serif">Serif</button>
@@ -93,9 +73,16 @@
     <button class="gold-btn" data-cat="display">Display</button>
     <button class="gold-btn" data-cat="handwriting">Handwriting</button>
 </div>
-  <!-- END NAV BUTTONS -->
+<!-- END FONT-TYPE--NAV BUTTONS -->
+	
+<!-- ============================================================
+     STEP 2 : SELECT A FONT FAMILY
+     ============================================================ -->
+<h4>Step 2 : Select A Font Family</h4>
+	
   
-  	<h4>Step 3 : Select A Font</h4>
+  
+  	<h4>Step 3 : Select A Font </h4>
 	
 <!-- END PAGE NAV BUTTONS -->
 
@@ -110,9 +97,10 @@
     <span class="gold-btn" id="font-list-showing">Showing: A–Z</span>
   </div>
 <!-- END INFO BADGES -->
-
-	<p>Choose a Font Type from the list Below. The font will be projected onto the text thats in the preview window.</p>
-
+	
+<!-- ========================================
+	 STEP 3 : CHANGE FONT FACE
+=================================== -->
 <!-- PREVIEW WINDOW CARD -->
 <div class="card">
 
@@ -151,13 +139,13 @@ Preview Window ... ...
 </div>
 <!-- END FONT FAMILY LIST -->
 
-<!-- ========================================
-	 STEP 3 : CHANGE FONT FACE
-=================================== -->
-
-
-
-
+<div class="gold-block">
+  <input class="search-input"
+      id="font-preview-input"
+      type="text"
+      placeholder="Type something here..."
+      autocomplete="off">
+</div>
 
 
 <!-- END FONT PREVIEW -->
