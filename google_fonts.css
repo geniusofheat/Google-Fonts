@@ -151,6 +151,8 @@ hr {
 
 .gold-btn-44 {
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 44px;
   height: 44px;
   border: 1px solid var(--gold);
@@ -162,7 +164,6 @@ hr {
   color: var(--gold);
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.2s;
 }
 
 .gold-btn-42 {
