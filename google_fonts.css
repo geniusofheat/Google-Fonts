@@ -209,6 +209,7 @@ hr {
   padding: 10px 12px;
 }
 .gold-block.borderless {
+	flex: wrap;
 	border-width: 0;
 	text-align: center;
 }
