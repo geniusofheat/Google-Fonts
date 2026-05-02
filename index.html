@@ -65,12 +65,12 @@
 ============================================================ -->
 
 <!-- ============================================================
-     STEP 1 : SELECT A FONT TYPE
+     TOOL 1 : GOOGLE FONTS VIEWER
    ============================================================ -->
-<!-- STEP 1 - CARD -->
+<!-- TOOL 1 - CARD -->
 <div class="card">
-		
-	<h3>Tool 1 : Google Fonts Viewer !</h3>
+	<h3>TOOL 1 :</h3>
+	<h3>Google Fonts Viewer !</h3>
 	
 	<p>Choose a Font Type from the NAV BUTTONS below. 
 		The first 5 font families from your selection will
@@ -112,43 +112,22 @@
 </div>
 <!-- END FONT FAMILY LIST -->
 </div>
-<!-- END STEP 1 - CARD -->
+<!-- END TOOL 1 - CARD -->
 <!-- ========================================
-	 END STEP 1 : SELECT A FONT TYPE
+	 END TOOL 1 : GOOGLE FONTS VIEWER
 =================================== -->
 <!-- ============================================================
-     STEP 2 : SELECT A FONT FAMILY
+     TOOL 2 : FONT STYLE VIEWER
    ============================================================ -->
-<!-- STEP 2 - CARD -->
+<!-- TOOL 2 - CARD -->
 <div class="card">
 
-
-
-  
+	<h3>Tool 2 :</h3>
+	<h4>Font Style Viewer !</h4>
 	
-
-
-	<p>The total number of fonts is listed
-	 in the info bar. Use the NAV BUTTONS
-	 to scroll through the list.</p>
-
-
-
-	<p>When you click an item from the 
-		list, the preview window will
-		present the selection. Use the 
-		style toolbars to change the styles.</p>
-	
-
-
-<!-- FONT PREVIEW WINDOW-GOLD BLOCK -->
-<div id="font-preview-output" class="gold-block">
-Preview Window ... ...
-</div>
-<!-- END FONT PREVIEW WINDOW-GOLD BLOCK -->
-
-<p>Type some words into the box to see it
-   made in the font you chose.</p></p>
+  <p>Type some words into the box to see
+    the words you write written in 
+	your selected font.</p>
 	
 <!-- PREVIEW WINDOW TEXT INPUT -->
 <div class="gold-block">
@@ -158,6 +137,21 @@ Preview Window ... ...
       placeholder="PREVIEW TEXT APPEARS HERE !"
       autocomplete="off">
 
+<!-- FONT PREVIEW WINDOW-GOLD BLOCK -->
+<div id="font-preview-output" class="gold-block">
+Preview Window ... ...
+</div>
+<!-- END FONT PREVIEW WINDOW-GOLD BLOCK -->
+
+<!-- FONT-SIZE SLIDER-GOLD BLOCK -->
+<div class="gold-block">
+    <label for="font-size-slider">Font-Size :</label>
+    <input type="range" id="font-size-slider"
+          min="10" max="72" value="20">
+    <label for="font-size-slider" id="font-size-label">Size: 20px</label>
+</div>
+<!-- END FONT-SIZE SLIDER-GOLD BLOCK -->
+	
 <!-- ITALICIZE AND COLOR PICKER-GOLD BLOCK -->
 <div class="gold-block borderless">
 
@@ -168,64 +162,76 @@ Preview Window ... ...
 <!-- COLOR PICKER-BUTTON -->
     <input type="color" id="color-picker" class="gold-btn-44">
 <!-- END COLOR PICKER-BUTTON -->
+	
 </div>
 <!-- END ITALICIZE AND COLOR PICKER-GOLD BLOCK -->
-	
 </div>
-<!-- END PREVIEW WINDOW TEXT INPUT -->
-
-<!-- FONT FAMILY LIST - 5 AT A TIME - JS API LIST -->
-<div id="font-family-list">
-</div>
-<!-- END FONT FAMILY LIST -->
-
-<!--- FONT RETRIEVAL SECTION -->
-	<h4>Copy Link Code : Link To Google Fonts !</h4>
+<!-- END TOOL 2 - CARD -->
+<!-- ============================================================
+     TOOL 2 : CSS FONT CODE CREATOR
+   ============================================================ -->
+<h3>Tool 3 :</h3>
+<h4>CSS Font Code Generator<h4>
 	
-  <p>Every font you want to use in your project
-    has to be retrieved from 
-	the Google Fonts cloud server. 
-	When you select a font family the codebox
-	will update with the link code which includes
-	the font family you selected. 
-	Copy the link code and
-	paste it into the head section of your 
-	html.</p>
+	<p>The Code Creator takes the styles
+	  you add to the font family and creates
+	  a code block with those styles as the
+	  rules for your stylesheet. You can change
+	  the values you by typing or by using
+	  the toolbars.</p>
+	
+	<h4>Copy Link Code : </h4>
+	
+  <p>Check the link inside the codebox
+     and find that it contains the font
+     family name you selected from the list.
+	 If its correct, then press the copy 
+	 button and paste it into your stylesheet.</p>
 
-<!-- CODEBOX 1 - LINK CODE -->
+<!-- CSS CODEBOX-->
+<h4>CSS Styles - Code Generator :</h4>
 <div class="gold-block">
     <code id="static-code-1"></code>
     <button class="gold-btn" id="copy-btn-1" onclick="copyStatic('static-code-1','copy-btn-1')">📋 Copy</button>
 </div>
-<!-- END CODEBOX 1 -- LINK CODE -->
-<!-- FONT RETRIEVAL SECTION -->
+<!-- END CSS CODEBOX -->
+	
 </div>
-<!-- END STEP 2 - CARD -->
+<!-- END TOOL 3 - CARD -->
+<!-- ============================================================
+     END TOOL 3 : CSS FONT CODE GENERATOR
+   ============================================================ -->
 <!-- ========================================
-	 END STEP 2 : SELECT A FONT FAMILY
-=================================== -->
-<!-- ========================================
-	 STEP 3 : CHANGE FONT STYLES
-=================================== -->
-<!-- STEP 3 - CARD -->
+	 TOOL 4 : GOOGLE FONTS LINK CODE CREATOR
+================================-->
+<!-- TOOL 4 - CARD -->
 <div class="card">
 
-<h4>Step 3 : Change Font Styles !</h4>
+<h3>Tool 4 :</h3>
+<h4>Link Code Generator</h4>
 	
+<p>Every font you want to use in your project
+    has to be retrieved from 
+	the Google Fonts Server. 
+	When you select a font family the codebox
+	will create the link code to include
+	the font family you selected.</p>
 
-
-<!-- FONT-SIZE SLIDER-GOLD BLOCK -->
+	<p>Copy the link code and
+	paste it into the head section of your 
+	html.</p>
+	
+<!-- LINK CODE GENERATOR BOX -->
+<h4>Header Link - Code Generator:</h4>
 <div class="gold-block">
-    <label for="font-size-slider">Font-Size :</label>
-    <input type="range" id="font-size-slider"
-          min="10" max="72" value="20">
-    <label for="font-size-slider" id="font-size-label">Size: 20px</label>
+    <code id="static-code-1"></code>
+    <button class="gold-btn" id="copy-btn-1" onclick="copyStatic('static-code-1','copy-btn-1')">📋 Copy</button>
 </div>
-<!-- END FONT-SIZE SLIDER-GOLD BLOCK -->
+<!-- END LINK CODE GENERATOR BOX -->
 </div>
-<!-- END STEP 3 - CARD -->
+<!-- END TOOL 4 - CARD -->
 <!-- ========================================
-	 END STEP 3 : CHANGE FONT STYLES
+	 TOOL 4 : LINK CODE GENERATOR
 ============================================-->
 
 <script src="google_fonts_data.js"></script>
