@@ -173,6 +173,21 @@ hr {
   padding: 2px;
   background: rgba(200,169,110,0.15);
 }
+.gold-btn-24 {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  padding: 2px 2px;
+  background: rgba(200,169,110,0.15);
+  font-family: 'Bree Serif', serif;
+  font-size: 14px;
+  color: var(--gold);
+}
+
 
 .gold-btn:active {
   background: var(--gold);
