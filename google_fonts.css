@@ -151,7 +151,7 @@ hr {
 }
 
 .gold-btn-44 {
-  display: flex;
+  display: inline-block;
   justify-content: center;
   align-items: center;
   width: 44px;
@@ -161,10 +161,8 @@ hr {
   padding: 2px 2px;
   background: rgba(200,169,110,0.15);
   font-family: 'Bree Serif', serif;
-  font-size: 10px;
+  font-size: 14px;
   color: var(--gold);
-  cursor: pointer;
-  white-space: nowrap;
 }
 
 .gold-btn-42 {
@@ -197,6 +195,7 @@ hr {
 }
 .gold-block.borderless {
 	border-width: 0;
+	text-align: center;
 }
 .blue-block {
   display: flex;
