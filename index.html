@@ -128,47 +128,70 @@
   <p>Type some words into the box to see
     the words you write written in 
 	your selected font.</p>
-	
+
 <!-- TEXT INPUT BOX -->
 <div class="gold-block">
+
+  <!-- PREVIEW INPUT -->
   <input class="search-input"
       id="font-preview-input"
       type="text"
       placeholder="PREVIEW TEXT APPEARS HERE !"
       autocomplete="off">
+  <!-- END PREVIEW INPUT -->
+
 </div>
 <!-- END TEXT INPUT BOX -->
 
-<!-- FONT PREVIEW WINDOW-GOLD BLOCK -->
+<!-- FONT PREVIEW WINDOW -->
 <div id="font-preview-output" class="gold-block block">
 
-<div class="gold-block borderless">
-<!-- ITALICIZE - BUTTON -->
-<button class="gold-btn-24" id="italic-toggle">[I]</button>
-<!-- END - ITALICIZE-BUTTON -->
-	
-<!-- COLOR PICKER - BUTTON -->
-<input type="color" id="color-picker">
-<!-- END  - COLOR PICKER-BUTTON -->
-</div>
-Preview Window ... ...
-</div>
-<!-- END FONT PREVIEW WINDOW-GOLD BLOCK -->
+  <!-- TEXT PREVIEW WWINDOW -->
+  <div id="preview-text">PREVIEW TEXT GOES HERE !...</div>
+  <!-- END TEXT PREVIEW WINDOW -->
 
-<!-- FONT-SIZE HORIZONTAL SLIDER-GOLD BLOCK -->
-<div class="gold-block inline">
-    <label for="font-size-slider">Font-Size :</label>
-    <input type="range" id="font-size-slider"
-          min="10" max="72" value="20">
-    <label for="font-size-slider" id="font-size-label">Size: 20px</label>
+  <!-- STYLE CONTROLS -->
+  <div class="gold-block borderless">
+
+    <!-- ITALICIZE BUTTON -->
+    <button class="gold-btn-24" id="italic-toggle">[I]</button>
+    <!-- END ITALICIZE BUTTON -->
+
+    <!-- COLOR PICKER -->
+    <input type="color" id="color-picker">
+    <!-- END COLOR PICKER -->
+
+  </div>
+  <!-- END STYLE CONTROLS -->
+
 </div>
-<!-- END FONT-SIZE HORIZONTAL SLIDER-GOLD BLOCK -->
+<!-- END FONT PREVIEW WINDOW -->
+
+<!-- FONT SIZE SLIDER -->
+<div class="gold-block">
+
+  <!-- FONT SIZE LABEL -->
+  <label for="font-size-slider">Font-Size :</label>
+  <!-- END FONT SIZE LABEL -->
+
+  <!-- FONT SIZE RANGE INPUT -->
+  <input type="range" id="font-size-slider"
+        min="10" max="72" value="20">
+  <!-- END FONT SIZE RANGE INPUT -->
+
+  <!-- FONT SIZE VALUE LABEL -->
+  <label for="font-size-slider" id="font-size-label">Size: 20px</label>
+  <!-- END FONT SIZE VALUE LABEL -->
+
+</div>
+<!-- END FONT SIZE SLIDER -->
 
 </div>
 <!-- END TOOL 2 - CARD -->
 <!-- ============================================================
-     END TOOL 2 : CSS FONT STYLE CREATOR
+     END TOOL 2 : FONT STYLE CREATOR
    ============================================================ -->
+
 <!-- ============================================================
      TOOL 3 - CSS FONT STYLE CODE GENERATOR
 ============================================================ -->
