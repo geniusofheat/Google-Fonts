@@ -101,6 +101,9 @@ hr {
   align-items: center;
   padding: 8px 4px;
 }
+.wrap {
+	flex: wrap
+}
 
 /* ================================================================
    BUTTONS
@@ -199,7 +202,7 @@ hr {
    ================================================================ */
 
 .gold-block {
-  display: flex;
+  diisplay: flex;
   align-items: center;
   gap: 10px;
   border: 1px double var(--gold);
@@ -209,7 +212,7 @@ hr {
   padding: 10px 12px;
 }
 .gold-block.borderless {
-	flex: wrap;
+
 	border-width: 0;
 	text-align: center;
 }
