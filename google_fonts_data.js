@@ -413,7 +413,15 @@ document.getElementById('font-preview-input').addEventListener('input', function
 });
 // ── END PAGE SECTION 11 : FONT PREVIEW INPUT ─────────────────
 
-// ── PAGE SECTION 12 : LOAD FONTS FROM API ────────────────────
+// ── PAGE SECTION 12 : FONT SIZE SLIDER ───────────────────────
+document.getElementById('font-size-slider').addEventListener('input', function() {
+  currentSize = parseInt(this.value);
+  document.getElementById('font-size-label').textContent = 'Size: ' + currentSize + 'px';
+  updateAllPreviews();
+});
+// ── END PAGE SECTION 12 : FONT SIZE SLIDER ───────────────────
+
+// ── PAGE SECTION 13 : LOAD FONTS FROM API ────────────────────
 async function loadFonts() {
   try {
     const url  = 'https://www.googleapis.com/webfonts/v1/webfonts?key=' + API_KEY + '&sort=popularity';
