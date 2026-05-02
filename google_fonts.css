@@ -202,7 +202,7 @@ hr {
    ================================================================ */
 
 .gold-block {
-  diisplay: flex;
+  display: block;
   align-items: center;
   gap: 10px;
   border: 1px double var(--gold);
