@@ -13,7 +13,6 @@ let filteredFonts   = [];
 let currentPage     = 0;
 const PAGE_SIZE     = 5;
 
-// Size and weight stored in state since dropdowns are removed
 let currentSize   = 20;
 let currentWeight = 400;
 // ── END CORE STATE ───────────────────────────────────────────
@@ -66,37 +65,76 @@ function getWeightNumber(variant) {
 // ── END UTILITY : WEIGHT NUMBER HELPER ───────────────────────
 
 
+// ── UTILITY : COLOR CONVERTERS ───────────────────────────────
+function hexToRgb(hex) {
+  var r = parseInt(hex.slice(1, 3), 16);
+  var g = parseInt(hex.slice(3, 5), 16);
+  var b = parseInt(hex.slice(5, 7), 16);
+  return { r: r, g: g, b: b };
+}
+
+function rgbToHsl(r, g, b) {
+  r /= 255; g /= 255; b /= 255;
+  var max = Math.max(r, g, b), min = Math.min(r, g, b);
+  var h, s, l = (max + min) / 2;
+  if (max === min) {
+    h = s = 0;
+  } else {
+    var d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+    }
+  }
+  return {
+    h: Math.round(h * 360),
+    s: Math.round(s * 100),
+    l: Math.round(l * 100)
+  };
+}
+
+function syncColorDisplays(hex) {
+  var rgb = hexToRgb(hex);
+  var hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+  var hexEl = document.getElementById('color-hex');
+  var rgbEl = document.getElementById('color-rgb');
+  var hslEl = document.getElementById('color-hsl');
+  if (hexEl) hexEl.value = hex;
+  if (rgbEl) rgbEl.value = 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
+  if (hslEl) hslEl.value = 'hsl(' + hsl.h + ', ' + hsl.s + '%, ' + hsl.l + '%)';
+}
+// ── END UTILITY : COLOR CONVERTERS ───────────────────────────
+
+
 // ── PAGE SECTION 1 : UPDATE ALL PREVIEW BOXES ────────────────
 function updateAllPreviews() {
-  const previewInput = document.getElementById('font-preview-input');
-  const previewText  = (previewInput && previewInput.value.trim())
+  var previewInput = document.getElementById('font-preview-input');
+  var previewText  = (previewInput && previewInput.value.trim())
     ? previewInput.value.trim()
     : (selectedFont ? selectedFont.family : 'Preview');
 
-  const color      = document.getElementById('color-picker').value;
-  const isItalic   = document.getElementById('italic-toggle').classList.contains('active');
-  const safeName = selectedFont
-  ? selectedFont.family.replace(/\s+/g, '_') + '_preview'
-  : null;
+  var color    = document.getElementById('color-picker').value;
+  var isItalic = document.getElementById('italic-toggle').classList.contains('active');
 
-  const fontFamily = safeName
-  ? '"' + safeName + '", serif'
-  : 'inherit';
+  var safeName = selectedFont
+    ? selectedFont.family.replace(/\s+/g, '_') + '_preview'
+    : null;
 
-  const previews = [
-    document.getElementById('font-preview-output'),
-    document.getElementById('font-color-preview')
-  ];
+  var fontFamily = safeName
+    ? '"' + safeName + '", serif'
+    : 'inherit';
 
-  previews.forEach(function(el) {
-    if (!el) return;
+  var el = document.getElementById('preview-text');
+  if (el) {
     el.textContent      = previewText;
     el.style.fontFamily = fontFamily;
     el.style.fontSize   = currentSize + 'px';
     el.style.fontWeight = currentWeight;
     el.style.fontStyle  = isItalic ? 'italic' : 'normal';
     el.style.color      = color;
-  });
+  }
 
   syncCodeBoxes();
 }
@@ -107,21 +145,21 @@ function updateAllPreviews() {
 function syncCodeBoxes() {
   if (!selectedFont) return;
 
-  const color    = document.getElementById('color-picker').value;
-  const isItalic = document.getElementById('italic-toggle').classList.contains('active');
+  var color    = document.getElementById('color-picker').value;
+  var isItalic = document.getElementById('italic-toggle').classList.contains('active');
 
-  const linkCode = '<link href="https://fonts.googleapis.com/css2?family=' +
+  var linkCode = '<link href="https://fonts.googleapis.com/css2?family=' +
     selectedFont.family.replace(/\s+/g, '+') +
     ':wght@' + currentWeight + '&display=swap" rel="stylesheet">';
 
-  const cssCode = "font-family: '" + selectedFont.family + "', " + selectedFont.category + ';\n' +
-                  'font-size: '    + currentSize   + 'px;\n' +
-                  'font-weight: '  + currentWeight + ';\n' +
-                  'font-style: '   + (isItalic ? 'italic' : 'normal') + ';\n' +
-                  'color: '        + color  + ';';
+  var cssCode = "font-family: '" + selectedFont.family + "', " + selectedFont.category + ';\n' +
+                'font-size: '    + currentSize   + 'px;\n' +
+                'font-weight: '  + currentWeight + ';\n' +
+                'font-style: '   + (isItalic ? 'italic' : 'normal') + ';\n' +
+                'color: '        + color + ';';
 
-  const c1 = document.getElementById('static-code-1');
-  const c2 = document.getElementById('static-code-2');
+  var c1 = document.getElementById('static-code-1');
+  var c2 = document.getElementById('static-code-2');
   if (c1) c1.textContent = linkCode;
   if (c2) c2.textContent = cssCode;
 }
@@ -130,12 +168,12 @@ function syncCodeBoxes() {
 
 // ── PAGE SECTION 3 : SEARCH DROPDOWN ─────────────────────────
 function showSuggestions(query) {
-  const dropdown = document.getElementById('search-dropdown');
+  var dropdown = document.getElementById('search-dropdown');
   if (!dropdown) return;
-  const cleaned = cleanQuery(query);
+  var cleaned = cleanQuery(query);
   if (!cleaned) { hideSuggestions(); return; }
 
-  const matches = allFonts
+  var matches = allFonts
     .filter(function(f) { return f.family.toLowerCase().includes(cleaned); })
     .slice(0, 8);
 
@@ -143,7 +181,7 @@ function showSuggestions(query) {
 
   dropdown.innerHTML = '';
   matches.forEach(function(font) {
-    const item = document.createElement('div');
+    var item = document.createElement('div');
     item.className   = 'dropdown-item';
     item.textContent = font.family;
 
@@ -166,7 +204,7 @@ function showSuggestions(query) {
 }
 
 function hideSuggestions() {
-  const dropdown = document.getElementById('search-dropdown');
+  var dropdown = document.getElementById('search-dropdown');
   if (dropdown) dropdown.style.display = 'none';
 }
 // ── END PAGE SECTION 3 : SEARCH DROPDOWN ─────────────────────
@@ -174,19 +212,19 @@ function hideSuggestions() {
 
 // ── PAGE SECTION 4 : RENDER PAGE NAV ROW ─────────────────────
 function renderPageNav() {
-  const nav = document.getElementById('font-page-nav');
+  var nav = document.getElementById('font-page-nav');
   if (!nav) return;
   nav.innerHTML = '';
 
-  const total = filteredFonts.length;
+  var total = filteredFonts.length;
   if (total <= PAGE_SIZE) return;
 
-  const totalPages  = Math.ceil(total / PAGE_SIZE);
-  const windowStart = Math.max(0, currentPage - 1);
-  const isFirst     = currentPage === 0;
+  var totalPages  = Math.ceil(total / PAGE_SIZE);
+  var windowStart = Math.max(0, currentPage - 1);
+  var isFirst     = currentPage === 0;
 
   if (!isFirst) {
-    const backBtn = document.createElement('button');
+    var backBtn = document.createElement('button');
     backBtn.className   = 'gold-btn';
     backBtn.textContent = 'Back';
     backBtn.onclick = function() {
@@ -197,7 +235,7 @@ function renderPageNav() {
     nav.appendChild(backBtn);
   }
 
-  const visibleCount = isFirst ? 4 : 3;
+  var visibleCount = isFirst ? 4 : 3;
   for (var i = 0; i < visibleCount; i++) {
     var pageIndex = windowStart + i;
     if (pageIndex >= totalPages) break;
@@ -221,7 +259,7 @@ function renderPageNav() {
   }
 
   if (currentPage < totalPages - 1) {
-    const nextBtn = document.createElement('button');
+    var nextBtn = document.createElement('button');
     nextBtn.className   = 'gold-btn';
     nextBtn.textContent = 'Next';
     nextBtn.onclick = function() {
@@ -237,30 +275,31 @@ function renderPageNav() {
 
 // ── PAGE SECTION 5 : RENDER FONT PAGE ────────────────────────
 function renderFontPage() {
-  const list = document.getElementById('font-family-list');
+  var list = document.getElementById('font-family-list');
   if (!list) return;
   list.innerHTML = '';
 
-  const start = currentPage * PAGE_SIZE;
-  const end   = Math.min(start + PAGE_SIZE, filteredFonts.length);
-  const page  = filteredFonts.slice(start, end);
+  var start = currentPage * PAGE_SIZE;
+  var end   = Math.min(start + PAGE_SIZE, filteredFonts.length);
+  var page  = filteredFonts.slice(start, end);
 
   if (page.length === 0) {
-    const none = document.createElement('p');
+    var none = document.createElement('p');
     none.textContent = 'No fonts found.';
     list.appendChild(none);
     return;
   }
 
-  const ol = document.createElement('ol');
+  var ol = document.createElement('ol');
   ol.className = 'font-names-list';
   ol.start     = start + 1;
 
   page.forEach(function(font) {
-    const safeName = font.family.replace(/\s+/g, '_') + '_preview';
-    loadFontFace(safeName, font.menu);
+    var safeName    = font.family.replace(/\s+/g, '_') + '_preview';
+    var menuVariant = font.files['regular'] || font.files['italic'] || Object.values(font.files)[0];
+    loadFontFace(safeName, menuVariant);
 
-    const li = document.createElement('li');
+    var li = document.createElement('li');
     li.className        = 'font-list-item';
     li.textContent      = font.family;
     li.style.fontFamily = '"' + safeName + '", serif';
@@ -270,15 +309,7 @@ function renderFontPage() {
         item.classList.remove('active');
       });
       li.classList.add('active');
-
       selectedFont = font;
-
-      const firstVariant = Object.keys(font.files)[0];
-      const firstSafe    = font.family.replace(/\s+/g, '_') + '_' + firstVariant;
-      loadFontFace(firstSafe, font.files[firstVariant]);
-      const output = document.getElementById('font-preview-output');
-      if (output) output.style.fontFamily = '"' + firstSafe + '", serif';
-
       updateAllPreviews();
     });
 
@@ -295,19 +326,19 @@ function renderFontList(category) {
   if (category !== undefined) {
     currentCategory = category;
     currentSearch   = '';
-    const searchEl  = document.getElementById('font-search');
+    var searchEl    = document.getElementById('font-search');
     if (searchEl) searchEl.value = '';
     hideSuggestions();
   }
 
-  const cats = currentCategory === 'all' ? CATEGORIES : [currentCategory];
+  var cats = currentCategory === 'all' ? CATEGORIES : [currentCategory];
   filteredFonts = [];
 
   cats.forEach(function(cat) {
-    let fonts = allFonts.filter(function(f) { return f.category === cat; });
+    var fonts = allFonts.filter(function(f) { return f.category === cat; });
 
     if (currentSearch) {
-      const cleaned = cleanQuery(currentSearch);
+      var cleaned = cleanQuery(currentSearch);
       fonts = fonts.filter(function(f) {
         return f.family.toLowerCase().startsWith(cleaned);
       });
@@ -319,8 +350,8 @@ function renderFontList(category) {
 
   filteredFonts.sort(function(a, b) { return a.family.localeCompare(b.family); });
 
-  const totalEl   = document.getElementById('font-list-total');
-  const showingEl = document.getElementById('font-list-showing');
+  var totalEl   = document.getElementById('font-list-total');
+  var showingEl = document.getElementById('font-list-showing');
 
   if (totalEl)   totalEl.textContent   = 'Total: ' + filteredFonts.length;
   if (showingEl) showingEl.textContent = 'Showing: 1–' + Math.min(PAGE_SIZE, filteredFonts.length);
@@ -347,7 +378,7 @@ document.getElementById('font-family-options').addEventListener('click', functio
 // ── PAGE SECTION 8 : A–Z ROW CLICKS ──────────────────────────
 document.getElementById('az-row').addEventListener('click', function(e) {
   if (!e.target.matches('.az-btn')) return;
-  const letter = e.target.dataset.letter;
+  var letter = e.target.dataset.letter;
 
   if (currentSearch === letter) {
     currentSearch = '';
@@ -394,6 +425,7 @@ document.getElementById('search-btn').addEventListener('click', function() {
 
 // ── PAGE SECTION 10 : COLOR AND ITALIC CONTROLS ──────────────
 document.getElementById('color-picker').addEventListener('input', function() {
+  syncColorDisplays(this.value);
   updateAllPreviews();
 });
 
@@ -401,17 +433,21 @@ document.getElementById('italic-toggle').addEventListener('click', function() {
   this.classList.toggle('active');
   updateAllPreviews();
 });
+
+// Initialize color displays on load
+syncColorDisplays(document.getElementById('color-picker').value);
 // ── END PAGE SECTION 10 : COLOR AND ITALIC CONTROLS ──────────
 
 
 // ── PAGE SECTION 11 : FONT PREVIEW INPUT ─────────────────────
 document.getElementById('font-preview-input').addEventListener('input', function() {
-  const preview = document.getElementById('font-preview-output');
-  const value   = this.value.trim();
+  var preview = document.getElementById('preview-text');
+  var value   = this.value.trim();
   if (preview) preview.textContent = value || 'Your text will appear here';
   updateAllPreviews();
 });
 // ── END PAGE SECTION 11 : FONT PREVIEW INPUT ─────────────────
+
 
 // ── PAGE SECTION 12 : FONT SIZE SLIDER ───────────────────────
 document.getElementById('font-size-slider').addEventListener('input', function() {
@@ -421,20 +457,21 @@ document.getElementById('font-size-slider').addEventListener('input', function()
 });
 // ── END PAGE SECTION 12 : FONT SIZE SLIDER ───────────────────
 
+
 // ── PAGE SECTION 13 : LOAD FONTS FROM API ────────────────────
 async function loadFonts() {
   try {
-    const url  = 'https://www.googleapis.com/webfonts/v1/webfonts?key=' + API_KEY + '&sort=popularity';
-    const res  = await fetch(url);
+    var url  = 'https://www.googleapis.com/webfonts/v1/webfonts?key=' + API_KEY + '&sort=popularity';
+    var res  = await fetch(url);
     if (!res.ok) throw new Error('API error ' + res.status);
-    const data = await res.json();
-    allFonts   = data.items;
+    var data = await res.json();
+    allFonts = data.items;
     renderFontList('all');
   } catch (err) {
-    const list = document.getElementById('font-family-list');
+    var list = document.getElementById('font-family-list');
     if (list) {
       list.innerHTML = '';
-      const errMsg = document.createElement('p');
+      var errMsg = document.createElement('p');
       errMsg.textContent = 'Could not load fonts. Check your API key.';
       list.appendChild(errMsg);
     }

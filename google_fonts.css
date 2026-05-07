@@ -55,7 +55,6 @@ h3 {
 }
 
 h4 {
-  
   font-weight: 400;
   font-size: 16px;
   color: var(--text);
@@ -154,18 +153,19 @@ hr {
 }
 
 .gold-btn-44 {
-  display: inline-block;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   width: 44px;
   height: 44px;
   border: 1px solid var(--gold);
   border-radius: 6px;
-  padding: 2px 2px;
+  padding: 2px;
   background: rgba(200,169,110,0.15);
   font-family: 'Bree Serif', serif;
   font-size: 14px;
   color: var(--gold);
+  cursor: pointer;
 }
 
 .gold-btn-42 {
@@ -176,25 +176,34 @@ hr {
   padding: 2px;
   background: rgba(200,169,110,0.15);
 }
+
 .gold-btn-24 {
-  display: block;
+  display: flex;
   justify-content: center;
   align-items: center;
   width: 24px;
   height: 24px;
   border: 1px solid var(--gold);
   border-radius: 6px;
-  padding: 2px 2px;
+  padding: 2px;
   background: rgba(200,169,110,0.15);
   font-family: 'Bree Serif', serif;
   font-size: 14px;
   color: var(--gold);
+  cursor: pointer;
+  flex-shrink: 0;
 }
-
 
 .gold-btn:active {
   background: var(--gold);
   color: #0a0904;
+}
+
+.gold-btn-24.active {
+  background: var(--gold);
+  color: #0a0904;
+  font-style: italic;
+  font-weight: bold;
 }
 
 /* ================================================================
@@ -215,8 +224,9 @@ hr {
     display: block;
 }
 .gold-block.borderless {
+	justify-content: flex-end;
 	border-width: 0;
-	text-align: center;
+	margin: 20px;
 }
 .blue-block {
   display: flex;
@@ -244,7 +254,7 @@ hr {
   flex-direction: column;
   border: 1px solid var(--gold-border);
   border-radius: 14px;
-  background: var(--card-bg);
+  background: var(--blue-bg);
   box-shadow: 0 2px 20px rgba(0,0,0,0.5),
               inset 0 1px 0 rgba(200,169,110,0.08);
   position: relative;
@@ -511,6 +521,7 @@ code {
 .dropdown-item:active {
   background: #1e3a5f;
 }
+
 /* ── TOOLBOX ROW (TRUE SINGLE-LINE TOOLBAR) ───────── */
 .toolbox-row {
   display: flex;
@@ -518,10 +529,8 @@ code {
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
-
   width: 100%;
-  overflow-x: auto; /* prevents wrapping, enables horizontal scroll if needed */
-
+  overflow-x: auto;
   padding: 6px 0;
 }
 
@@ -530,8 +539,7 @@ code {
   display: flex;
   flex-direction: column;
   gap: 3px;
-
-  flex: 0 0 auto; /* CRITICAL: prevents stretching */
+  flex: 0 0 auto;
 }
 
 /* ── LABELS (SMALL + CLEAN) ───────────────────────── */
@@ -544,9 +552,9 @@ code {
 /* ── INPUTS (STOP FULL WIDTH EXPANSION) ───────────── */
 .toolbox-item input,
 .toolbox-item select {
-  width: auto;        /* CRITICAL FIX */
-  min-width: 70px;    /* keeps usability */
-  max-width: 90px;    /* forces compact layout */
+  width: auto;
+  min-width: 70px;
+  max-width: 90px;
   font-size: 12px;
 }
 
@@ -559,14 +567,11 @@ code {
 .toolbox-item button {
   width: 28px;
   height: 28px;
-
   padding: 0;
   font-size: 12px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 6px;
 }
 
@@ -576,6 +581,7 @@ code {
   padding: 2px 4px;
   font-size: 12px;
 }
+
 /* ================================================================
    TOOL ROW
    ================================================================ */
@@ -594,6 +600,7 @@ code {
     margin-bottom: 0px;
     padding: 5px 5px;
 }
+
 /* --- SEARCH INPUT --- */
 .search-input {
 	flex: 1;
@@ -608,7 +615,6 @@ code {
 	outline: none;
 	box-shadow: inset 0 1px 0 rgba(180,230,255,0.08);
 	border: 2px solid gold;
-	
 	margin: 0px;
 	padding: 5px;
 }
@@ -618,6 +624,7 @@ code {
 .search-input:focus {
 	border: 2px solid gold;
 }
+
 /* ================================================================
    FONT LIST CARD — compact inline font names
    ================================================================ */
@@ -691,6 +698,7 @@ code {
 #font-preview-text::placeholder {
   color: var(--text-muted);
 }
+
 /* ================================================================
    FONT NAMES LIST — numbered ordered list, full width
    ================================================================ */
@@ -752,6 +760,51 @@ code {
   padding: 6px 4px;
   margin-bottom: 4px;
 }
+
+/* ================================================================
+   FONT SIZE SLIDER
+   ================================================================ */
+
+#font-size-slider {
+  flex: 1;
+  accent-color: var(--gold);
+  cursor: pointer;
+  touch-action: pan-x;
+}
+
+/* ================================================================
+   COLOR VALUE DISPLAYS
+   ================================================================ */
+
+.color-values-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.color-value-input {
+  width: 100%;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid var(--gold-border);
+  background: rgba(0,0,0,0.3);
+  color: var(--gold);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  padding: 3px 6px;
+  outline: none;
+  letter-spacing: 0.04em;
+}
+
+.color-value-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ================================================================
+   SLIDERS (GENERAL)
+   ================================================================ */
+
 .slider-row {
   display: flex;
   justify-content: center;
